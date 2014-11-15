@@ -1,0 +1,132 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath} 
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{algorithm,algorithmic}
+
+\title{Distributed PageRank - First Report}
+\author{Aaron Myers, Megan Ruthven}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+This purpose of this project is to investigate distributed PageRank and attempt to find alternate approaches to PageRank that might offer som additional value in some form (faster, easier, fewer iterations, etc). The goal of this project for us is two-fold.
+\begin{enumerate}
+\item Apply ADMM \cite{ADMM} to the linear problem and determine if there is value in taking an easy-to-parallelize approach rather than complex methods.
+\item Approach the problem with the typical power iteration, treating the matrix as a graph and attempting to do the appropriate load balancing and work list updates to allow for faster convergence or fewer iterations.
+\end{enumerate}
+
+\section{Linear System Approach}
+This approach requires that we form the PageRank problem into a linear system (Ax=b) in which case solving for x would provide the PageRank. Below is a simple derivation taken from \cite{Fast Parallel}.
+\begin{center}
+\begin{align}
+	P' &= P + dv^{T} \\
+	P'' &= cP' + (1-c)ev^{T} \\
+	x^{k+1} &= P''^{T}x^{k}
+\end{align}
+
+\end{center}
+Where P$'$ and P$''$ modified PageRank matrix to create a connected graph and add a personalization factor and equation 3 is the simple Power Iteration. (e is the vector of all 1).
+\newline
+Given the additional information below, we can derive the linear system for finding the principal eigenvector.
+
+
+\begin{center}
+\begin{align}
+  d^{T}x &= \| x\| - \| P^{T}x\| \\
+  x &= [cP^{T} + c(vd^{T}) + (1-c)ve^{T}]x
+\end{align}
+\end{center}
+
+We then have the resulting equation:
+
+\begin{center}
+\begin{equation}
+  (I-cP^{T})x = kv
+\end{equation}
+\end{center}
+We now have the principle eigenvector solver in the from of Ax = b, a linear system; where A = I-c$P^{T}$ and kv = b
+
+
+
+\subsection{ADMM}
+
+Most of the articles we encountered for parallel pagerank used Jacobi iteration or some Krylov Subspace method (GMRES, BiCGSTAB, etc), but we attempted to implement something we were introduce to in this course, namely ADMM \cite{ADMM}. This is an extremely simple way to parallelize a linear solve and we will compare these results to GMRES and BiCGSTAB for the same problem parallelizing using PETSc. We expect ADMM to have worse performance, but we would like to quantify the loss in accuracy/time relatvie to the ease of implementation.
+\newline
+\linebreak
+Below is a brief description of the ADMM idea and algorithm.
+\newline
+We take the linear problem and split up the data accordingly:
+\begin{center}
+\begin{align}
+	A &= \left[ A_{1} ... A_{n} \right]' \\
+	b &= \left[ b_{1} ... b_{n} \right]' 
+\end{align}
+\end{center}
+Our origninal minimization of Ax-b with a certain norm and regulariztion on x now becomes:
+
+\begin{center}
+\begin{align}
+	&minimize \: \: \: \sum_{i=1}^{N} l_{i}(A_{i}x_{i} - b_{i}) + r(z) \\
+	&subject \: \: \: to \: \: \: x_{i} - z = 0 \: \: \: \forall i
+\end{align}
+\end{center}
+Where $x_{i}$ are local variables that we force to match the global solution z at each step.
+\newline
+The resulting algorithm, using the augmented lagrangian presented in the ADMM method \cite{ADMM}, is as follows:
+
+\begin{center}
+\begin{align}
+	x_{i}^{k+1} &= argmin_{x} \: \: \: l_{i}(A_{i}x_{i} - b_{i}) + \frac{\rho}{2} \| x_{i}^{k} - z^{k} - u_{i}^{k} \|_{2}^{2} \\
+	z^{k+1} &= argmin_{z} \: \: \: r(z) + \frac{N \rho}{x} \| z^{k} - \bar{x}^{k+1} - \bar{u}^{k} \|_{2}^{2} \\
+	u_{i}^{k+1} &= u_{i}^{k} + x_{i}^{k+1} - z^{k+1}  
+\end{align}
+\end{center}
+Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$
+
+
+
+% Here we talk about typical methods to solve linear equations -------------------------------------------
+\subsection{ADMM Results Compared to other Linear methods}
+Below are the inital results for ADMM programmed in Matlab for a simple data set
+
+
+\newpage
+%Power iteration section with distributed programming ------------------------------------
+\section{Power Iteration Approach}
+In addition to the Linear system, we will approach Distributed PageRank as a Graph with power iteration. We have slightly modified the approach (inspired by \cite{Joyce}) by first computing all updated pagerank values and for every subsequent update, we only modify the pagerank of the nodes whose change in value is above some certain threshold. We will also use the magnitude of these changes to prioritize a worklist for the algorithm to execute. 
+\newline
+\begin{algorithm}
+\caption{Power Iteration with Worklist}
+\begin{algorithmic}[1]
+  \STATE Initialize x, v, c, d, delta (threshold)
+  \STATE Compute Px for all nodes
+  \WHILE{Worklist is not empty}
+  \IF{$Px_{i}^{k} - x_{i}^{k} >$ delta}
+	\STATE Add $x_{i}$ to the worklist
+	\STATE Push the residual to all neighboring nodes
+  \ENDIF
+  \ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+\newline
+
+
+\begin{thebibliography}{1}
+
+\bibitem{Power Law Graphs} David Gleich, et al. {\em Scalable Computing for Power Law Graphs: Experience with Parallel PageRank}
+
+\bibitem{Fast Parallel} David Gleich, et al. {\em Fast Parallel PageRank: A Linear System Approach} 
+
+\bibitem{ADMM} Stephen Boyd, et al. {\em Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers} 
+
+\bibitem{Joyce} Joyce {\em Presentation on Parallel PageRank}
+  
+\end{thebibliography}
+
+\end{document}
