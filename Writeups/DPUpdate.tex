@@ -99,7 +99,7 @@ Below are the inital results for ADMM programmed in Matlab for a simple data set
 \newpage
 %Power iteration section with distributed programming ------------------------------------
 \section{Power Iteration Approach}
-In addition to the Linear system, we will approach Distributed PageRank as a Graph with power iteration. We have slightly modified the approach (inspired by \cite{Joyce}) by first computing all updated pagerank values and for every subsequent update, we only modify the pagerank of the nodes whose change in value is above some certain threshold. We will also use the magnitude of these changes to prioritize a worklist for the algorithm to execute. 
+In addition to the Linear system, we will approach Distributed PageRank as a Graph with power iteration. We have slightly modified the approach (inspired by \cite{Joyce}) by first computing all updated pagerank values and for every subsequent update, we only modify the pagerank of the nodes pointed to by an update change in value above some certain threshold. We will also use the magnitude of these changes to prioritize a worklist for the algorithm to execute. 
 \newline
 \begin{algorithm}
 \caption{Power Iteration with Worklist}
@@ -107,14 +107,26 @@ In addition to the Linear system, we will approach Distributed PageRank as a Gra
   \STATE Initialize x, v, c, d, delta (threshold)
   \STATE Compute Px for all nodes
   \WHILE{Worklist is not empty}
-  \IF{$Px_{i}^{k} - x_{i}^{k} >$ delta}
-	\STATE Add $x_{i}$ to the worklist
-	\STATE Push the residual to all neighboring nodes
+  \IF{x_{i} in worklist}
+    \STATE take x_{i} off the worklist
+    \STATE x_{i}^{new} = (1-/alpha)*P_{i}*x + alpha/size(x)
+    \IF{abs(x_{i}^{new} - x_{i}) > delta}
+		\STATE x_{i} = x_{i}^{new}
+		\STATE add x_{j} onto worklist : \forall x_{i} -> x_{j}
+	/ENDIF
   \ENDIF
   \ENDWHILE
 \end{algorithmic}
 \end{algorithm}
 \newline
+
+
+We implemented the two algorithms of pagerank with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. 
+
+\section{Next Steps}
+
+Implement both the ADMM and Power Iteration methods with MPI and compare and contrast the results. The 
+
 
 
 \begin{thebibliography}{1}
