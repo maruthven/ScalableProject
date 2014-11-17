@@ -20,7 +20,8 @@ r(:,2)= r(:,1);
 
 i=2;
 tic;
-while norm(r(:,2))> k
+for j=1:k
+%while norm(r(:,2))> k
 	if i>2
 		r(:,1) = r(:,2);
 		rho(1)=rho(2);
@@ -41,7 +42,7 @@ while norm(r(:,2))> k
 	r(:,2) = s - w(2)*t;
 	i = 3;
 end
-x
+
 xf = x(:,2);
 toc
 
