@@ -1,0 +1,43 @@
+#
+# For GPC:
+#
+# module load intel/13.1.1
+# module load armadillo/3.910.0
+# #
+#
+CXX=icc
+#
+#EXTRA_LIB_FLAGS =  -L/opt/apps/intel/13/composer_xe_2013.3.163/mkl/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -lopenblas
+EXTRA_LIB_FLAGS = -L/opt/apps/intel/13/composer_xe_2013.3.163/mkl/lib/intel64 \
+       \
+      -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core \
+       -liomp5 -lpthread -lm
+#
+LIB_FLAGS = $(EXTRA_LIB_FLAGS)
+#
+OPT = -O3
+# ## As the Armadillo library uses recursive templates,
+# ## compilation times depend on the level of optimisation:
+# ##
+# ## -O0: quick compilation, but the resulting program will be slow
+# ## -O1: good trade-off between compilation time and execution speed
+# ## -O2: produces programs which have almost all possible speedups,
+# ##      but compilation takes longer
+#
+#
+#
+CXXFLAGS = $(OPT) -mkl=parallel -I /opt/apps/intel/13/composer_xe_2013.3.163/mkl/include
+#-I ~/armadillo-4.450.0/include -I /opt/apps/intel/13/composer_xe_2013.3.163/mkl/include
+#  -I"~/armadillo-4.450.0/include $MKLROOT/include"
+#
+all: mult
+#
+mult: pagerank.cpp
+	$(CXX) $(CXXFLAGS) $(EXTRAFLAGS)  -fopenmp -o $@  $<  $(LIB_FLAGS)
+#
+#
+.PHONY: clean
+#
+clean:
+#
+#

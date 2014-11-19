@@ -4,6 +4,7 @@
 \usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{algorithm,algorithmic}
+\usepackage{caption}
 
 \title{Distributed PageRank - First Report}
 \author{Aaron Myers, Megan Ruthven}
@@ -15,10 +16,10 @@
 \pagebreak
 
 \section{Introduction}
-This purpose of this project is to investigate distributed PageRank and attempt to find alternate approaches to PageRank that might offer som additional value in some form (faster, easier, fewer iterations, etc). The goal of this project for us is two-fold.
+This purpose of this project is to investigate distributed PageRank and attempt to find alternate approaches to PageRank that might offer some additional value in some form (faster, easier, fewer iterations, etc). The goal of this project for us is two-fold.
 \begin{enumerate}
 \item Apply ADMM \cite{ADMM} to the linear problem and determine if there is value in taking an easy-to-parallelize approach rather than complex methods.
-\item Approach the problem with the typical power iteration, treating the matrix as a graph and attempting to do the appropriate load balancing and work list updates to allow for faster convergence or fewer iterations.
+\item Approach the problem with the typical power iteration, treating the matrix as a graph and attempting to do the appropriate load balancing and work list updates to allow for faster convergence or fewer iterations. Our idea is maintain a worklist that contains only nodes (and connected nodes) whose updated value is above a set threshold, we will refer to this as $"$delta updating$"$.
 \end{enumerate}
 
 \section{Linear System Approach}
@@ -81,21 +82,37 @@ Where $x_{i}$ are local variables that we force to match the global solution z a
 The resulting algorithm, using the augmented lagrangian presented in the ADMM method \cite{ADMM}, is as follows:
 
 \begin{center}
-\begin{align}
-	x_{i}^{k+1} &= argmin_{x} \: \: \: l_{i}(A_{i}x_{i} - b_{i}) + \frac{\rho}{2} \| x_{i}^{k} - z^{k} - u_{i}^{k} \|_{2}^{2} \\
-	z^{k+1} &= argmin_{z} \: \: \: r(z) + \frac{N \rho}{x} \| z^{k} - \bar{x}^{k+1} - \bar{u}^{k} \|_{2}^{2} \\
-	u_{i}^{k+1} &= u_{i}^{k} + x_{i}^{k+1} - z^{k+1}  
-\end{align}
+\begin{algorithm}
+\caption{ADMM Iteration}
+\begin{algorithmic}[1]
+	\STATE $x_{i}^{k+1} = argmin_{x} \: \: \: l_{i}(A_{i}x_{i} - b_{i}) + \frac{\rho}{2} \| x_{i}^{k} - z^{k} - u_{i}^{k} \|_{2}^{2}$ 
+	\STATE $z^{k+1} = argmin_{z} \: \: \: r(z) + \frac{N \rho}{x} \| z^{k} - \bar{x}^{k+1} - \bar{u}^{k} \|_{2}^{2} $
+	\STATE $u_{i}^{k+1} = u_{i}^{k} + x_{i}^{k+1} - z^{k+1} $ 
+  \end{algorithmic}
+\end{algorithm}
 \end{center}
+
 Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$
 
 
 
 % Here we talk about typical methods to solve linear equations -------------------------------------------
 \subsection{ADMM Results Compared to other Linear methods}
-Below are the inital results for ADMM programmed in Matlab for a simple data set
+Below are the inital results for ADMM programmed in Matlab for a simple data set (a disconnected synthetic 11 node graph). 
 
-
+\begin{center}
+\captionof{table}{Linear Method Table}
+\begin{tabular}{l || r}
+	\hline\hline
+	\multicolumn{2}{c}{5 iter results} \\
+	\hline\hline
+	Method  & $\|\hat{x} - x\| $ \\
+	\hline
+	GMRES & 0.0047  \\
+	BiCGSTAB & 0.0056  \\
+	ADMM & 0.0079  \\
+\end{tabular}
+\end{center}
 \newpage
 %Power iteration section with distributed programming ------------------------------------
 \section{Power Iteration Approach}
@@ -104,29 +121,68 @@ In addition to the Linear system, we will approach Distributed PageRank as a Gra
 \begin{algorithm}
 \caption{Power Iteration with Worklist}
 \begin{algorithmic}[1]
-  \STATE Initialize x, v, c, d, delta (threshold)
+  \STATE Initialize x, $\delta$ (threshold)
   \STATE Compute Px for all nodes
   \WHILE{Worklist is not empty}
-  \IF{x_{i} in worklist}
-    \STATE take x_{i} off the worklist
-    \STATE x_{i}^{new} = (1-/alpha)*P_{i}*x + alpha/size(x)
-    \IF{abs(x_{i}^{new} - x_{i}) > delta}
-		\STATE x_{i} = x_{i}^{new}
-		\STATE add x_{j} onto worklist : \forall x_{i} -> x_{j}
-	/ENDIF
+  \IF{$x_{i}$ in worklist}
+    \STATE take $x_{i}$ off the worklist
+	\STATE $x_{i}^{new} = (1-\alpha)*P_{i}*x + \frac{\alpha}{\#[x]}$
+    \IF{$|x_{i}^{new} - x_{i}| > \delta$}
+		\STATE $x_{i} = x_{i}^{new}$
+		\STATE add $x_{j}$ onto worklist : $\forall x_{i} \to x_{j}$
+	\ENDIF
   \ENDIF
   \ENDWHILE
 \end{algorithmic}
 \end{algorithm}
 \newline
 
+\subsection{Power Graph Results}
+We implemented the two algorithms of pagerank with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. A summary table is below.
 
-We implemented the two algorithms of pagerank with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. 
+\begin{center}
+\captionof{table}{Power Iteration - A}
+\begin{tabular}{l || c | r}
+	\hline
+	\multicolumn{3}{c}{Method Comparison} \\
+	\hline\hline
+	Method & Iteration Count & Time(s) \\
+	\hline\hline
+	Power Iteration & 25 & 4.72 \\
+	Delta Update & 20 & 1.90 \\
+\end{tabular}
+\end{center}
 
+
+\begin{center}
+\captionof{table}{Power Iteration - Friendster}
+\begin{tabular}{l || c | r}
+	\hline
+	\multicolumn{3}{c}{Method Comparison} \\
+	\hline\hline
+	Method & Iteration Count & Time(s) \\
+	\hline\hline
+	Power Iteration & 23 & 49.6 \\
+	Delta Update & 30 & 19.5 \\
+\end{tabular}
+\end{center}
 \section{Next Steps}
 
-Implement both the ADMM and Power Iteration methods with MPI and compare and contrast the results. The 
+Now that we have seen the value of both ADMM and data-driven PageRank, our next steps will involve parallelizing using MPI
 
+\begin{enumerate}
+	\item Parallelize the ADMM method using MPI and compare the results to running GMRES and BiCGSTAB with PETSc
+	\item Parallelize the data-driven PageRank problem using MPI and compare these results to other parallel Power Iteration approaches
+	\item Collect all results and provide conclusions about all methods and the value that each provides.
+\end{enumerate}
+
+\subsection{Load Balancing}
+We will also implement load balacing with both ADMM and the delta updating as described below.
+
+\begin{enumerate}
+	\item ADMM: each iteration, we will determine if the new local variable value has changed significantly. If so, it will be pushed to the master worklist to be operated on for the next iteration. If not, it will be removed from the worklist.
+	\item Delta Updating: similarly, each iteration will check the updated value of the node and push it and its out-neighbors to the master worklist if above a certain threshold. This master worklist will have duplicated removed and will divide the work evenly across all computing nodes. Ideally, the more connected nodes would be sent to the same compute node so some type of clustering may be beneficial for this operation.
+\end{enumerate}
 
 
 \begin{thebibliography}{1}

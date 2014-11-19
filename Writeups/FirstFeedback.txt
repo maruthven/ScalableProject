@@ -1,0 +1,6 @@
+Feedback from Naga, Inderjit, Joyce on 11/18/2014 about first submission
+-- Add more data structure/implementation details.
+-- Need comparison with other distributed or multi-core implementations of PageRank (GraphLab, Joyce's).
+-- Try on large graphs that don't fit in memory.
+-- Implement Joyce's algorithms or perhaps better variants in OpenMP (priority queue may be tricky in OpenMP).
+ -- Possibly use data-driven algorithm on each (multi-core) processor.

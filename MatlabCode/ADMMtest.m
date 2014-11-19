@@ -1,10 +1,13 @@
+%% ADMM with Lasso regularization
+% Aaron Myers Fall 2014
 
+function [z]=ADMMtest(A,b,rho,iter,N)
 %inputs
-iter = 15;
-rho = 1.5;
+%iter = 1;
+%rho = 1.5;
+%N = 2;
 
 % Splitting up the matrix to send to separate threads
-N=2;
 As=cell(1,N); % Cell to store separate A
 bs=cell(1,N); % cell to store separate b
 xs=cell(1,N); % cell to store separate x
@@ -49,4 +52,5 @@ for i=1:iter
 end
 
 %output 
-z
+
+end
