@@ -118,7 +118,7 @@ int multiply(vector<double>& x, vector<vector<int> > & my_array, vector<double> 
 
 main(int argc, char *argv[])
 {
-	char * file_name = "Afile.txt";
+	char * file_name = argv[1];
 	int rank;
 	int mpi_num_nodes;
 	int err;

@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.6.12)  17 NOV 2014 10:15
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.6.12)  1 DEC 2014 15:24
 entering extended mode
  %&-line parsing enabled.
 **DPUpdate.tex
@@ -185,18 +185,18 @@ Package caption Info: float package v1.3 (or newer) detected on input line 275.
 ) (./DPUpdate.aux)
 \openout1 = `DPUpdate.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
-LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
 
 (/usr/share/texmf/tex/latex/ucs/ucsencs.def
 File: ucsencs.def 2003/11/29 Fixes to fontencodings LGR, T3
@@ -239,27 +239,33 @@ File: umsb.fd 2002/01/19 v2.2g AMS font definitions
  [1
 
 {/usr/share/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 60--66
+Underfull \hbox (badness 10000) in paragraph at lines 59--65
 
  []
 
 [2]
-Overfull \hbox (4.52843pt too wide) in paragraph at lines 80--83
+Overfull \hbox (4.52843pt too wide) in paragraph at lines 79--82
 \OT1/cmr/m/n/10 The re-sult-ing al-go-rithm, us-ing the aug-mented la-grangian 
 pre-sented in the ADMM
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 119--139
+Underfull \hbox (badness 10000) in paragraph at lines 118--138
 
  []
 
-[4] [5] (./DPUpdate.aux) ) 
+[4]
+Overfull \hbox (140.36412pt too wide) in paragraph at lines 197--198
+[]\OT1/cmr/m/n/10 mcs.anl.gov \OT1/cmr/m/it/10 http://www.mcs.anl.gov/research/
+projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html 
+ []
+
+[5] [6] (./DPUpdate.aux) ) 
 Here is how much of TeX's memory you used:
- 2554 strings out of 256216
- 36060 string characters out of 1917072
+ 2560 strings out of 256216
+ 36112 string characters out of 1917072
  102472 words of memory out of 1500000
- 5808 multiletter control sequences out of 10000+200000
+ 5814 multiletter control sequences out of 10000+200000
  11858 words of font info for 46 fonts, out of 1200000 for 2000
  645 hyphenation exceptions out of 8191
  35i,9n,38p,562b,625s stack positions out of 5000i,500n,6000p,200000b,15000s
@@ -272,9 +278,9 @@ are/texmf/fonts/type1/bluesky/cm/cmr17.pfb></usr/share/texmf/fonts/type1/bluesk
 y/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/tex
 mf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/c
 msy7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb>
-Output written on DPUpdate.pdf (5 pages, 96221 bytes).
+Output written on DPUpdate.pdf (6 pages, 98881 bytes).
 PDF statistics:
- 70 PDF objects out of 1000 (max. 8388607)
+ 73 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

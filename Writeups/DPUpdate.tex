@@ -6,15 +6,14 @@
 \usepackage{algorithm,algorithmic}
 \usepackage{caption}
 
+
 \title{Distributed PageRank - First Report}
 \author{Aaron Myers, Megan Ruthven}
 
 \begin{document}
-
 \maketitle
 \tableofcontents
 \pagebreak
-
 \section{Introduction}
 This purpose of this project is to investigate distributed PageRank and attempt to find alternate approaches to PageRank that might offer some additional value in some form (faster, easier, fewer iterations, etc). The goal of this project for us is two-fold.
 \begin{enumerate}
@@ -193,8 +192,20 @@ We will also implement load balacing with both ADMM and the delta updating as de
 
 \bibitem{ADMM} Stephen Boyd, et al. {\em Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers} 
 
-\bibitem{Joyce} Joyce {\em Presentation on Parallel PageRank}
-  
+\bibitem{Joyce} Joyce Whang, et al. {\em Scalable Data-driven PageRank: Algorithms, System Issues '\&' Lessons Learned}
+ 
+ \bibitem{MPIref} mcs.anl.gov {\em http://www.mcs.anl.gov/research/projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html}
+ 
+ \bibitem{FSU} fsu.edu {\em http://people.sc.fsu.edu/~jburkardt/cppsrc/mpi/mpi.html}
+
+ \bibitem{MPIPR} Xiaoyi (Eric) Li  {\em Parallel PageRank Computation using MPI}
+
+ \bibitem{YahooPPR} David Gleich, Leonid Zhukov, Pavel Berkhin  {\em Fast Parallel PageRank: Methods and Evaluations}
+
+ \bibitem{IndianaPPR} Shubhada Karavinkoppa and Jayesh Kawli  {\em Page Rank Algorithm Using MPI}
+
+ \bibitem{MixedMPI} Bundit Manaskasemsak, Putchong Uthayopas, Arnon Rungsawang {\em A Mixed MPI-Thread Approach for Parallel Page Ranking Computation}
+
 \end{thebibliography}
 
 \end{document}
