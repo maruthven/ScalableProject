@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {section}{\numberline {2}Linear System Approach}{2}
+\contentsline {subsection}{\numberline {2.1}ADMM}{3}
+\contentsline {subsection}{\numberline {2.2}ADMM Results Compared to other Linear methods}{4}
+\contentsline {section}{\numberline {3}Power Iteration Approach}{5}
+\contentsline {subsection}{\numberline {3.1}Power Graph Results}{5}
+\contentsline {section}{\numberline {4}Next Steps}{6}
+\contentsline {subsection}{\numberline {4.1}Load Balancing}{6}
+\contentsline {section}{\numberline {5}Related Work}{6}
+\contentsline {section}{\numberline {6}Results}{6}

@@ -6,3 +6,5 @@
 \contentsline {subsection}{\numberline {3.1}Power Graph Results}{4}
 \contentsline {section}{\numberline {4}Next Steps}{5}
 \contentsline {subsection}{\numberline {4.1}Load Balancing}{5}
+\contentsline {section}{\numberline {5}Related Work}{5}
+\contentsline {section}{\numberline {6}Results}{5}

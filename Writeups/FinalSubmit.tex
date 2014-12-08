@@ -7,7 +7,7 @@
 \usepackage{caption}
 
 
-\title{Distributed PageRank - First Report}
+\title{Distributed PageRank - Final Report}
 \author{Aaron Myers, Megan Ruthven}
 
 \begin{document}
@@ -15,14 +15,21 @@
 \tableofcontents
 \pagebreak
 \section{Introduction}
-This purpose of this project is to investigate distributed PageRank and attempt to find alternate approaches to PageRank that might offer some additional value in some form (faster, easier, fewer iterations, etc). The goal of this project for us is two-fold.
+The purpose of this project is to investigate distributed PageRank by applying Pagerank methods currently in use in the multi-thread case to the distributed scenario and determine if these methods can be scaled to multi-machine systems. We also take a method that has already proven to be effective in the distributed setting and apply it to the Pagerank problem (ADMM \cite{ADMM}. Immediately below is a more detailed description of each approach. The primary metrics for performace will be: speedup, scalability, and ease of coding/understanding, all of which will be explained in the results section. The last metric is included to suggest that ease of coding and understanding of a method has an impact on the adoption rate in industry and therefore should be included in this investigation.
 \begin{enumerate}
-\item Apply ADMM \cite{ADMM} to the linear problem and determine if there is value in taking an easy-to-parallelize approach rather than complex methods.
-\item Approach the problem with the typical power iteration, treating the matrix as a graph and attempting to do the appropriate load balancing and work list updates to allow for faster convergence or fewer iterations. Our idea is maintain a worklist that contains only nodes (and connected nodes) whose updated value is above a set threshold, we will refer to this as $"$delta updating$"$.
+\item Apply ADMM \cite{ADMM} to the linear form of the Pagerank problem (Ax=b) and determine if there is value in taking this approach rather than other methods (Power Iteration, Linear solver with GMRES, BICGStab, etc). Since it is more difficult to apply a data-drive approach to the separated minimization problems, we expect this method to have less than great performance for speed, but higher performance for ease of coding/understanding.
+
+\item Approach the problem with the typical power iteration combined with data-driven and topology-driven approaches (listed below) to iterating along with appropriate load balancing. The idea is to maintain a worklist that contains only nodes whose change in pagerank value is above a set threshold, we will refer to this as $"$delta updating$"$. This method is primarily taken from \cite{Joyce} and we will simply apply this method in the distributed setting with MPI. There are both major and subtle differences between each of the approaches below and we will go into greater detail about these differences later in this paper, althought a more thorough explaination can be found in \cite{Joyce}.
+  \begin{enumerate}
+	\item Push based: 
+	 \item Pull based:
+	 \item Push-pull based:
+	 \item Topology driven:
+  \end{enumerate}
 \end{enumerate}
 
 \section{Linear System Approach}
-This approach requires that we form the PageRank problem into a linear system (Ax=b) in which case solving for x would provide the PageRank. Below is a simple derivation taken from \cite{Fast Parallel}.
+This approach requires that we form the PageRank problem into a linear system (Ax=b) in which case solving for x would provide the list of PageRank values. Below is a simple derivation taken from \cite{Fast Parallel}.
 \begin{center}
 \begin{align}
 	P' &= P + dv^{T} \\
@@ -31,26 +38,35 @@ This approach requires that we form the PageRank problem into a linear system (A
 \end{align}
 
 \end{center}
-Where P$'$ and P$''$ modified PageRank matrix to create a connected graph and add a personalization factor and equation 3 is the simple Power Iteration. (e is the vector of all 1).
+Where P$'$ and P$''$ are the modified PageRank matrices that have the modifications necessary to create a connected graph and add a personalization factor and e is a vector of all 1's, resulting in equation 3, the Power Iteration approach to Pagerank.
 \newline
-Given the additional information below, we can derive the linear system for finding the principal eigenvector.
+\linebreak
+Given the additional information below, we can derive the linear system for Pagerank.
 
 
 \begin{center}
 \begin{align}
+  e^{T}x & = x^{T}e = \|x\|_{1} = \|x\| \\
   d^{T}x &= \| x\| - \| P^{T}x\| \\
   x &= [cP^{T} + c(vd^{T}) + (1-c)ve^{T}]x
 \end{align}
 \end{center}
 
-We then have the resulting equation:
+Combining the information above, we arrive at the following equation:
 
 \begin{center}
 \begin{equation}
   (I-cP^{T})x = kv
 \end{equation}
 \end{center}
-We now have the principle eigenvector solver in the from of Ax = b, a linear system; where A = I-c$P^{T}$ and kv = b
+We now have Pagerank in a linear form (Ax=b), where A = I-c$P^{T}$ and kv = b. If in addition, we normalize x, we have the following:
+
+\begin{center}
+  \begin{align}
+	k &= \|x\| - c \|P^{T}x\| = (1-c) \|x\| + d^{T}x \\	
+	k &= 1-c 
+  \end{align}
+\end{center}
 
 
 
