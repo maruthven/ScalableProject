@@ -72,10 +72,11 @@ We now have Pagerank in a linear form (Ax=b), where A = I-c$P^{T}$ and kv = b. I
 
 \subsection{ADMM}
 
-Most of the articles we encountered for parallel pagerank used Jacobi iteration or some Krylov Subspace method (GMRES, BiCGSTAB, etc), but we attempted to implement something we were introduce to in this course, namely ADMM \cite{ADMM}. This is an extremely simple way to parallelize a linear solve and we will compare these results to GMRES and BiCGSTAB for the same problem parallelizing using PETSc. We expect ADMM to have worse performance, but we would like to quantify the loss in accuracy/time relatvie to the ease of implementation.
+Many of the articles we encountered for solving parallel pagerank in the linear form used Jacobi iteration or some Krylov Subspace method (GMRES, BiCGSTAB, etc), but we attempted to implement something we were introduce to in this course, namely ADMM \cite{ADMM}. This is an extremely simple way to parallelize a linear solve. This process attempts to split the linear problem into subsections, solve separately, and combine the information in a very specific way. 
+We will compare these results to the implementation of GMRES and BiCGSTAB for the same problem parallelizing using PETSc \cite{Power Law Graphs}. We expect ADMM to have worse performance, measured by speedup, but we would like to quantify the loss in accuracy/time relative to the ease of implementation and scalability.
 \newline
 \linebreak
-Below is a brief description of the ADMM idea and algorithm.
+Below is a brief description of the ADMM idea and algorithm \cite{ADMM}.
 \newline
 We take the linear problem and split up the data accordingly:
 \begin{center}
@@ -92,7 +93,7 @@ Our origninal minimization of Ax-b with a certain norm and regulariztion on x no
 	&subject \: \: \: to \: \: \: x_{i} - z = 0 \: \: \: \forall i
 \end{align}
 \end{center}
-Where $x_{i}$ are local variables that we force to match the global solution z at each step.
+Where $x_{i}$ are local variables that we force to match the global solution z at each step and N is the number of processes used to solve the problem.
 \newline
 The resulting algorithm, using the augmented lagrangian presented in the ADMM method \cite{ADMM}, is as follows:
 
@@ -107,7 +108,7 @@ The resulting algorithm, using the augmented lagrangian presented in the ADMM me
 \end{algorithm}
 \end{center}
 
-Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$
+Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$ and for our implementation, we chose the $L^{1}$ regularization term (also known as lasso) and used a gradient solver with Eigen to solve the minimization for x. Using the lasso regulariztion the z update becomes soft-thresholding update.
 
 
 
@@ -130,8 +131,8 @@ Below are the inital results for ADMM programmed in Matlab for a simple data set
 \end{center}
 \newpage
 %Power iteration section with distributed programming ------------------------------------
-\section{Power Iteration Approach}
-In addition to the Linear system, we will approach Distributed PageRank as a Graph with power iteration. We have slightly modified the approach (inspired by \cite{Joyce}) by first computing all updated pagerank values and for every subsequent update, we only modify the pagerank of the nodes pointed to by an update change in value above some certain threshold. We will also use the magnitude of these changes to prioritize a worklist for the algorithm to execute. 
+\section{Power Iteration Approach - Delta Updating}
+In addition to the Linear system, we have Distributed PageRank with power iteration. We use an approach (taken from \cite{Joyce}) by first computing all updated pagerank values and for every subsequent update, we only modify the pagerank of the outgoing nodes of a node whose updated pagerank has a value above some certain threshold. We will also use the magnitude of these changes to prioritize a worklist for the algorithm to execute. 
 \newline
 \begin{algorithm}
 \caption{Power Iteration with Worklist}
@@ -152,8 +153,8 @@ In addition to the Linear system, we will approach Distributed PageRank as a Gra
 \end{algorithm}
 \newline
 
-\subsection{Power Graph Results}
-We implemented the two algorithms of pagerank with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. A summary table is below.
+\subsection{Power Iteration Results}
+We implemented the the of the algorithms discussed in \cite{Joyce} in the distributed setting using MPI and MPI with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. A summary table is below.
 
 \begin{center}
 \captionof{table}{Power Iteration - A}
