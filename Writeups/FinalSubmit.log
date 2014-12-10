@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.6.12)  7 DEC 2014 22:32
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=pdflatex 2013.6.12)  10 DEC 2014 14:46
 entering extended mode
  %&-line parsing enabled.
 **FinalSubmit.tex
@@ -255,12 +255,12 @@ pre-sented in the ADMM
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 135--155
+Underfull \hbox (badness 10000) in paragraph at lines 151--171
 
  []
 
 [5]
-Overfull \hbox (140.36412pt too wide) in paragraph at lines 218--219
+Overfull \hbox (140.36412pt too wide) in paragraph at lines 234--235
 []\OT1/cmr/m/n/10 mcs.anl.gov \OT1/cmr/m/it/10 http://www.mcs.anl.gov/research/
 projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html 
  []
@@ -283,7 +283,7 @@ ype1/bluesky/cm/cmex10.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmmi10.pfb>
 esky/cm/cmr7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmr8.pfb></usr/share/
 texmf/fonts/type1/bluesky/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/bluesky/c
 m/cmsy7.pfb></usr/share/texmf/fonts/type1/bluesky/cm/cmti10.pfb>
-Output written on FinalSubmit.pdf (7 pages, 104069 bytes).
+Output written on FinalSubmit.pdf (7 pages, 106019 bytes).
 PDF statistics:
  78 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 131072)

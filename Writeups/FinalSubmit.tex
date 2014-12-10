@@ -108,9 +108,25 @@ The resulting algorithm, using the augmented lagrangian presented in the ADMM me
 \end{algorithm}
 \end{center}
 
-Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$ and for our implementation, we chose the $L^{1}$ regularization term (also known as lasso) and used a gradient solver with Eigen to solve the minimization for x. Using the lasso regulariztion the z update becomes soft-thresholding update.
+Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$ and for our implementation, we chose the $L^{1}$ regularization term (also known as lasso) and used a gradient solver with Eigen to solve the minimization for x. Using the lasso regulariztion the z update becomes soft-thresholding update. Considering the Lasso method, the updated algorithm is below.
 
+\begin{center}
+\begin{algorithm}
+\caption{ADMM Iteration with Lasso}
+\begin{algorithmic}[1]
+  \STATE $x_{i}^{k+1} = argmin_{x} \: \: \: \|(A_{i}x_{i} - b_{i})\|_{2}^{2} + \frac{\rho}{2} \| x_{i}^{k} - z^{k} - u_{i}^{k} \|_{2}^{2}$ 
+  \STATE $z^{k+1} = S_{\lambda/\rho N} (\bar{x}^{k+1} - \bar{u}^{k})$
+	\STATE $u_{i}^{k+1} = u_{i}^{k} + x_{i}^{k+1} - z^{k+1} $ 
+  \end{algorithmic}
+\end{algorithm}
+\end{center}
 
+Where S is defined componend-wise in the following way:
+\begin{center}
+	\begin{equation}
+	  S_{\lambda/\rho N}(x_{i}) := (x_{i} - \frac{\lambda}{\rho N})_{+} - (-x_{i} - \frac{\lambda}{\rho N})_{+}
+	\end{equation}
+\end{center}
 
 % Here we talk about typical methods to solve linear equations -------------------------------------------
 \subsection{ADMM Results Compared to other Linear methods}
