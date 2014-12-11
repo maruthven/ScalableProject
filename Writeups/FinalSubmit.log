@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  11 DEC 2014 16:09
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  11 DEC 2014 16:22
 entering extended mode
 **C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
 (C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
@@ -241,62 +241,72 @@ LaTeX Font Info:    ... okay on input line 20.
 [1
 
 {C:/Users/mar3939/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 40--60
+
+LaTeX Warning: Reference `alg:toppgrnk' on page 2 undefined on input line 38.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--80
 
  []
 
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 71--75
+[2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 91--95
 
  []
 
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 105--112
+
+Underfull \hbox (badness 10000) in paragraph at lines 125--132
 
  []
 
-[4]
+[4] [5]
 ! Undefined control sequence.
-l.172 \captionof
+l.192 \captionof
                 {table}{Power Iteration - A}
 ? 
 ! Undefined control sequence.
-l.186 \captionof
+l.206 \captionof
                 {table}{Power Iteration - Friendster}
 ? 
-[5]
 ! Undefined control sequence.
-l.201 \captionof
+l.221 \captionof
                 {table}{Linear Method Table}
 ? 
 [6]
-Overfull \hbox (100.05557pt too wide) in paragraph at lines 236--237
+Overfull \hbox (100.05557pt too wide) in paragraph at lines 259--260
 []\OT1/cmr/m/n/12 mcs.anl.gov \OT1/cmr/m/it/12 http://www.mcs.anl.gov/research/
 projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html 
  []
 
 [7] (C:\Users\mar3939\Documents\GitHub\ScalableProject\Writeups\FinalSubmit.aux
-) ) 
+)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 2524 strings out of 493921
- 33308 string characters out of 3144870
+ 2525 strings out of 493921
+ 33322 string characters out of 3144870
  101839 words of memory out of 3000000
- 5809 multiletter control sequences out of 15000+200000
+ 5810 multiletter control sequences out of 15000+200000
  10280 words of font info for 37 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  27i,9n,32p,1166b,566s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb
-><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><
-C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:
-/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Pr
-ogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Progr
-am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program 
-Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Fil
-es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (
-x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x8
-6)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/
-MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on FinalSubmit.pdf (7 pages, 153719 bytes).
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/
+Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Pro
+gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x
+86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86
+)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti12.pfb>
+Output written on FinalSubmit.pdf (7 pages, 154229 bytes).
 PDF statistics:
  70 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

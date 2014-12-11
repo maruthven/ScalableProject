@@ -34,7 +34,27 @@ The methods' performance will be compared on total time, speed up, and scalabili
 
 This section discusses the implementations of different methods for computing pagerank. This includes power iteration, ADMM, and data-driven approach. 
 
-\subsection{Power Iteration}
+\subsection{Topology-driven Power Iteration}
+This is the classic implmentation for calculating Pagerank, seen in algorithm~\ref{alg:toppgrnk} . It is straight forward, but recalculates all X values every iteration. This could be redundant on a large percentage of the X indices, and therefore, it could waste computational power. 
+
+\begin{algorithm}
+\label{alg:toppgrnk}
+\caption{Power Iteration with Worklist}
+\begin{algorithmic}[1]
+  \STATE Initialize x, $\delta$ (threshold)
+  \STATE Compute Px for all nodes
+  \WHILE{Worklist is not empty}
+  \IF{$x_{i}$ in worklist}
+    \STATE take $x_{i}$ off the worklist
+	\STATE $x_{i}^{new} = (1-\alpha)*P_{i}*x + \frac{\alpha}{\#[x]}$
+    \IF{$|x_{i}^{new} - x_{i}| > \delta$}
+		\STATE $x_{i} = x_{i}^{new}$
+		\STATE add $x_{j}$ onto worklist : $\forall x_{i} \to x_{j}$
+	\ENDIF
+  \ENDIF
+  \ENDWHILE
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Data-Driven Pagerank}
 In addition to the ADMM implementation, we implemented power iteration, as well as three permutations of the data-driven pagerank method (pull, pull-push, and push). The data-driven method (taken from \cite{Joyce}) aims to minimize unnecessary computation by only updating pageranks of elements whose incoming connections were upated to a satisfactory degree. 
@@ -158,7 +178,7 @@ Where S is defined componend-wise in the following way:
 	\end{equation}
 \end{center}
 
-\subsection{Load Balancing}
+\section{Load Balancing}
 First we implemented our methods where each node had the same amount of X's to compute. To allow for more equality in the amount of computations each node had to do, our implementations moved to a method where each node were assigned a continuous set of indices where each node had the same amount of nonzero connections between the indices and other nodes. 
 
 
@@ -210,7 +230,8 @@ Below are the inital results for ADMM programmed in Matlab for a simple data set
 	ADMM & 0.0079  \\
 \end{tabular}
 \end{center}
-\newpage
+
+
 \section{Future Work}
 
 Now that we have seen the value of both ADMM and data-driven PageRank, our next steps will involve parallelizing using MPI
@@ -222,7 +243,9 @@ Now that we have seen the value of both ADMM and data-driven PageRank, our next 
 \end{enumerate}
 
 
+\section{Conclusion}
 
+This bib actually needs to be in a separate bib file
 \begin{thebibliography}{1}
 
 \bibitem{Power Law Graphs} David Gleich, et al. {\em Scalable Computing for Power Law Graphs: Experience with Parallel PageRank}
