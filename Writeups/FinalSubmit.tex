@@ -1,11 +1,18 @@
-\documentclass[a4paper,10pt]{article}
-\usepackage[utf8x]{inputenc}
-\usepackage{amsmath} 
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{algorithm,algorithmic}
-\usepackage{caption}
+%\documentclass[a4paper,10pt]{article}
+%\usepackage[utf8x]{inputenc}
+%\usepackage{amsmath} 
+%\usepackage{mathtools}
+%\usepackage{amssymb}
+%\usepackage{algorithm,algorithmic}
+%\usepackage{caption}
 
+\documentclass[letterpaper,12pt,onecolumn]{article}
+\usepackage[margin=1in]{geometry} %one inch margins
+\usepackage{amsmath,graphicx}
+\usepackage{algorithm,algorithmic}
+
+
+\geometry{verbose,margin=1in}
 
 \title{Distributed PageRank - Final Report}
 \author{Aaron Myers, Megan Ruthven}
@@ -19,12 +26,12 @@ The purpose of this project is to investigate distributed PageRank by applying P
 \begin{enumerate}
 \item Apply ADMM \cite{ADMM} to the linear form of the Pagerank problem (Ax=b) and determine if there is value in taking this approach rather than other methods (Power Iteration, Linear solver with GMRES, BICGStab, etc). Since it is more difficult to apply a data-drive approach to the separated minimization problems, we expect this method to have less than great performance for speed, but higher performance for ease of coding/understanding.
 
-\item Approach the problem with the typical power iteration combined with data-driven and topology-driven approaches (listed below) to iterating along with appropriate load balancing. The idea is to maintain a worklist that contains only nodes whose change in pagerank value is above a set threshold, we will refer to this as $"$delta updating$"$. This method is primarily taken from \cite{Joyce} and we will simply apply this method in the distributed setting with MPI. There are both major and subtle differences between each of the approaches below and we will go into greater detail about these differences later in this paper, althought a more thorough explaination can be found in \cite{Joyce}.
+\item Approach the problem with the typical power iteration combined with data-driven and topology-driven approaches (listed below) to iterating along with appropriate load balancing. The idea is to maintain a worklist that contains only nodes whose change in pagerank value is above a set threshold, we will refer to these as $"$data driven$"$ method. This method is primarily taken from \cite{Joyce} and we will simply apply this method in the distributed setting with MPI and openMP. There are both major and subtle differences between each of the approaches below and we will go into greater detail about these differences later in this paper, althought a more thorough explaination can be found in \cite{Joyce}.
   \begin{enumerate}
-	\item Push based: 
-	 \item Pull based:
-	 \item Push-pull based:
 	 \item Topology driven:
+	 \item Pull based:
+	 \item Pull-Push based:
+	\item Push based: 
   \end{enumerate}
 \end{enumerate}
 
