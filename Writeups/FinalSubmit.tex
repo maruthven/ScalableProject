@@ -9,7 +9,7 @@
 \documentclass[letterpaper,12pt,onecolumn]{article}
 \usepackage[margin=1in]{geometry} %one inch margins
 \usepackage{amsmath,graphicx}
-\usepackage{algorithm,algorithmic}
+\usepackage[chapter]{algorithm,algorithmic}
 
 
 \geometry{verbose,margin=1in}
@@ -35,48 +35,95 @@ The methods' performance will be compared on total time, speed up, and scalabili
 This section discusses the implementations of different methods for computing pagerank. This includes power iteration, ADMM, and data-driven approach. 
 
 \subsection{Topology-driven Power Iteration}
-This is the classic implmentation for calculating Pagerank, seen in algorithm~\ref{alg:toppgrnk} . It is straight forward, but recalculates all X values every iteration. This could be redundant on a large percentage of the X indices, and therefore, it could waste computational power. 
+This is the classic implmentation for calculating Pagerank, seen in algorithm~\ref{alg:top} . It is straight forward, but recalculates all X values every iteration. This could be redundant on a large percentage of the X indices, and therefore, it could waste computational power. 
 
 \begin{algorithm}
-\label{alg:toppgrnk}
-\caption{Power Iteration with Worklist}
+\caption{Topology-driven Pagerank}
+\label{alg:top}
 \begin{algorithmic}[1]
-  \STATE Initialize x, $\delta$ (threshold)
-  \STATE Compute Px for all nodes
-  \WHILE{Worklist is not empty}
-  \IF{$x_{i}$ in worklist}
-    \STATE take $x_{i}$ off the worklist
-	\STATE $x_{i}^{new} = (1-\alpha)*P_{i}*x + \frac{\alpha}{\#[x]}$
-    \IF{$|x_{i}^{new} - x_{i}| > \delta$}
-		\STATE $x_{i} = x_{i}^{new}$
-		\STATE add $x_{j}$ onto worklist : $\forall x_{i} \to x_{j}$
+  \STATE Input: graph $P_{r} = (V_r, E_r)$, $\alpha$, $\epsilon$
+  \STATE Output: Pagerank $\mathbf{x}$
+  \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$
+  \STATE $\exists  \medspace \mathbf{x_r}$ in $\mathbf{x}$ as $P_r$ is to $P$
+  \WHILE{true}
+	\FOR{$v \in V_r$}
+		\STATE $x_{v}^{(k+1)} = \alpha + (1 - \alpha) \sum_{w \in S_v} \frac{x_{w}^{(k)}}{|T_w|} $
+		\STATE $\delta_{v} = | x_{v}^{(k+1)} - x_{v}^{(k)} | $
+	\ENDFOR
+	\STATE sync all $\mathbf{x_r}$ between nodes
+	\IF{$\|\delta \|_{\infty} < \epsilon$}
+		\STATE break;
 	\ENDIF
-  \ENDIF
   \ENDWHILE
+  \STATE $\mathbf{x} = \frac{\mathbf{x} }{\|x\|_{1}}$
 \end{algorithmic}
 \end{algorithm}
 
 \subsection{Data-Driven Pagerank}
 In addition to the ADMM implementation, we implemented power iteration, as well as three permutations of the data-driven pagerank method (pull, pull-push, and push). The data-driven method (taken from \cite{Joyce}) aims to minimize unnecessary computation by only updating pageranks of elements whose incoming connections were upated to a satisfactory degree. 
-\newline
+
 \begin{algorithm}
-\caption{Power Iteration with Worklist}
+\caption{Pull Data-driven Pagerank}
+\label{alg:pull}
 \begin{algorithmic}[1]
-  \STATE Initialize x, $\delta$ (threshold)
-  \STATE Compute Px for all nodes
-  \WHILE{Worklist is not empty}
-  \IF{$x_{i}$ in worklist}
-    \STATE take $x_{i}$ off the worklist
-	\STATE $x_{i}^{new} = (1-\alpha)*P_{i}*x + \frac{\alpha}{\#[x]}$
-    \IF{$|x_{i}^{new} - x_{i}| > \delta$}
-		\STATE $x_{i} = x_{i}^{new}$
-		\STATE add $x_{j}$ onto worklist : $\forall x_{i} \to x_{j}$
-	\ENDIF
-  \ENDIF
+  \STATE Input: graph $P_{r} = (V_r, E_r)$, $\alpha$, $\epsilon$
+  \STATE Output: Pagerank $\mathbf{x}$
+  \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$ and $\mathbf{t_r} = true \times \mathbf{e_r}$
+  \STATE $\exists  \medspace \mathbf{x_r}$ in $\mathbf{x}$ as $P_r$ is to $P$
+  \WHILE{$\exists \medspace v \medspace s.t. \medspace t_v = true$}
+	\STATE $t^{new} = false \times \mathbf{e}$
+	\FOR{$v \in V_r$}
+		\IF{$t_v = true$}
+			\STATE $x_{v}^{new} = \alpha + (1 - \alpha) \sum_{w \in S_v} \frac{x_{w}}{|T_w|} $
+			\IF{ $| x_{v}^{new} - x_{v} | \geq \epsilon  $}
+				\STATE $x_v = x_v^{new}$
+				\FOR{$w \in T_v$}
+					\STATE $t_w^{new} = true$
+				\ENDFOR
+			\ENDIF
+		\ENDIF
+	\ENDFOR
+	\STATE sync all $\mathbf{x_r}$ between nodes
+	\STATE logical or all $t = t^{new}$ between nodes
   \ENDWHILE
+  \STATE $\mathbf{x} = \frac{\mathbf{x} }{\|x\|_{1}}$
 \end{algorithmic}
 \end{algorithm}
-\newline
+
+\begin{algorithm}
+\caption{Pull-Push Data-driven Pagerank}
+\label{alg:pullpush}
+\begin{algorithmic}[1]
+  \STATE Input: graph $P_{r} = (V_r, E_r)$, $\alpha$, $\epsilon$
+  \STATE Output: Pagerank $\mathbf{x}$
+  \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$
+  \STATE $\exists  \medspace \mathbf{x_r}$ in $\mathbf{x}$ as $P_r$ is to $P$
+  \STATE Initialize $\mathbf{r} = \mathbf{0}$
+  \FOR{$v \in V_r$}
+	\FOR{$w \in S_v$}
+		\STATE $r_v = r_v + \frac{1}{|T_w|}$
+	\ENDFOR
+	\STATE $r_v = (1 - \alpha)\alpha r_v$
+  \ENDFOR
+
+  \WHILE{$\exists \medspace v \medspace s.t. \medspace r_v \geq \epsilon$}
+	\STATE $r^{new} = \mathbf{0}$
+	\FOR{$v \in V_r$}
+		\IF{$r_v \geq \epsilon$}
+			\STATE $x_{v} = \alpha + (1 - \alpha) \sum_{w \in S_v} \frac{x_{w}}{|T_w|} $
+			\FOR{$w \in T_v$}
+				\STATE $r_w^{new} = r_w^{new} + \frac{r_v \alpha}{|T_v|}$
+			\ENDFOR
+		\ELSE
+			\STATE $r_v^{new} = r_v^{new} + r_v$
+		\ENDIF
+	\ENDFOR
+	\STATE sync all $\mathbf{x_r}$ between nodes
+	\STATE add all and scatter $ r_r = r^{new}$ between nodes
+  \ENDWHILE
+  \STATE $\mathbf{x} = \frac{\mathbf{x} }{\|x\|_{1}}$
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Linear System Approach}
 This approach requires that we form the Pagerank problem into a linear system (Ax=b) in which case solving for x would provide the list of Pagerank values. Below is a simple derivation taken from \cite{Fast Parallel}.
@@ -189,7 +236,7 @@ The different methods had varying quantitative and qualitative results. These in
 We implemented the the of the algorithms discussed in \cite{Joyce} in the distributed setting using MPI and MPI with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. A summary table is below.
 
 \begin{center}
-\captionof{table}{Power Iteration - A}
+\caption{Power Iteration - A}
 \begin{tabular}{l || c | r}
 	\hline
 	\multicolumn{3}{c}{Method Comparison} \\
