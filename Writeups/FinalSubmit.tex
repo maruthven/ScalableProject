@@ -24,19 +24,42 @@
 \section{Introduction}
 The purpose of this project is to investigate distributed PageRank by applying Pagerank methods currently in use in the multi-thread case and implement it in the distributed setting. It is to determine if these methods can be scaled to multi-machine systems. We also take a method that has already proven to be effective in the distributed setting and apply it to the Pagerank problem (ADMM <-- what does this stand for \cite{ADMM}). Immediately below is a more detailed description of each approach. The primary metrics for performace will be: speedup, scalability, and ease of implementation, all of which will be explained in the results section. The last metric is included to suggest that ease of coding and understanding of a method has an impact on the adoption rate in industry and therefore should be included in this investigation.
 
-Apply ADMM \cite{ADMM} to the linear form of the Pagerank problem (Ax=b) and determine if there is value in taking this approach rather than other methods (Power Iteration, Linear solver with GMRES, BICGStab, etc). Since it is more difficult to apply a data-driven approach to the separated minimization problems, we expect this method to have less than great performance for speed, but higher performance for ease of coding/understanding.
+We chose to investigate ADMM \cite{ADMM} because it would have higher performance for ease of coding and understanding. We applied ADMM to the linear form of the Pagerank problem (Ax=b), but it is more difficult to apply a data-driven approach to the separated minimization problems, so to investigate data-driven approaches outlined in~\cite{Joyce}, we implemented data-driven power iteration with MPI and openMP. Typical power iteration will be refered to as Topology driven. The data-driven methods were Pull, Pull-Push, and Push based. The details of each permutation of the data-driven methods will be discussed in following sections. Because each method is implemented on distributed nodes on a big dataset, each method took advantage of the separate memories, and divided the connection matrices between nodes. There, we implemented a static load balancing regime based on amount of nonzeros in the assigned rows, which proved to be more efficient than load balancing on the number of x elements to calculate. Load balancing will be explained more in the following sections. 
 
-Approach the problem with the typical power iteration combined with data-driven and topology-driven approaches (listed below) to iterating along with appropriate load balancing. The idea is to maintain a worklist that contains only nodes whose change in pagerank value is above a set threshold, we will refer to these as $"$data driven$"$ method. This method is primarily taken from~\cite{Joyce} and we addapted these methods in a distributed setting with MPI and openMP. There are both major and subtle differences between each of the approaches below and we will go into greater detail about these differences later in this paper, althought a more thorough explaination can be found in \cite{Joyce}.
-  \begin{enumerate}
-	 \item Topology driven:
-	 \item Pull based:
-	 \item Pull-Push based:
-	\item Push based: 
-  \end{enumerate}
+The methods' performance will be compared on total time, speed up, and scalability over varying amount of nodes (MPI), and cores per node (openMP). And finally, we will go over the limitations of the methods in MPI and openMP, and future work. 
 
+\section{Related Work}
 
-\section{Linear System Approach}
-This approach requires that we form the PageRank problem into a linear system (Ax=b) in which case solving for x would provide the list of PageRank values. Below is a simple derivation taken from \cite{Fast Parallel}.
+\section{Algorithms and Implementation}
+
+This section discusses the implementations of different methods for computing pagerank. This includes power iteration, ADMM, and data-driven approach. 
+
+\subsection{Power Iteration}
+
+\subsection{Data-Driven Pagerank}
+In addition to the ADMM implementation, we implemented power iteration, as well as three permutations of the data-driven pagerank method (pull, pull-push, and push). The data-driven method (taken from \cite{Joyce}) aims to minimize unnecessary computation by only updating pageranks of elements whose incoming connections were upated to a satisfactory degree. 
+\newline
+\begin{algorithm}
+\caption{Power Iteration with Worklist}
+\begin{algorithmic}[1]
+  \STATE Initialize x, $\delta$ (threshold)
+  \STATE Compute Px for all nodes
+  \WHILE{Worklist is not empty}
+  \IF{$x_{i}$ in worklist}
+    \STATE take $x_{i}$ off the worklist
+	\STATE $x_{i}^{new} = (1-\alpha)*P_{i}*x + \frac{\alpha}{\#[x]}$
+    \IF{$|x_{i}^{new} - x_{i}| > \delta$}
+		\STATE $x_{i} = x_{i}^{new}$
+		\STATE add $x_{j}$ onto worklist : $\forall x_{i} \to x_{j}$
+	\ENDIF
+  \ENDIF
+  \ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+\newline
+
+\subsection{Linear System Approach}
+This approach requires that we form the Pagerank problem into a linear system (Ax=b) in which case solving for x would provide the list of Pagerank values. Below is a simple derivation taken from \cite{Fast Parallel}.
 \begin{center}
 \begin{align}
 	P' &= P + dv^{T} \\
@@ -135,46 +158,12 @@ Where S is defined componend-wise in the following way:
 	\end{equation}
 \end{center}
 
-% Here we talk about typical methods to solve linear equations -------------------------------------------
-\subsection{ADMM Results Compared to other Linear methods}
-Below are the inital results for ADMM programmed in Matlab for a simple data set (a disconnected synthetic 11 node graph). 
+\subsection{Load Balancing}
+First we implemented our methods where each node had the same amount of X's to compute. To allow for more equality in the amount of computations each node had to do, our implementations moved to a method where each node were assigned a continuous set of indices where each node had the same amount of nonzero connections between the indices and other nodes. 
 
-\begin{center}
-\captionof{table}{Linear Method Table}
-\begin{tabular}{l || r}
-	\hline\hline
-	\multicolumn{2}{c}{5 iter results} \\
-	\hline\hline
-	Method  & $\|\hat{x} - x\| $ \\
-	\hline
-	GMRES & 0.0047  \\
-	BiCGSTAB & 0.0056  \\
-	ADMM & 0.0079  \\
-\end{tabular}
-\end{center}
-\newpage
-%Power iteration section with distributed programming ------------------------------------
-\section{Power Iteration Approach - Delta Updating}
-In addition to the Linear system, we have Distributed PageRank with power iteration. We use an approach (taken from \cite{Joyce}) by first computing all updated pagerank values and for every subsequent update, we only modify the pagerank of the outgoing nodes of a node whose updated pagerank has a value above some certain threshold. We will also use the magnitude of these changes to prioritize a worklist for the algorithm to execute. 
-\newline
-\begin{algorithm}
-\caption{Power Iteration with Worklist}
-\begin{algorithmic}[1]
-  \STATE Initialize x, $\delta$ (threshold)
-  \STATE Compute Px for all nodes
-  \WHILE{Worklist is not empty}
-  \IF{$x_{i}$ in worklist}
-    \STATE take $x_{i}$ off the worklist
-	\STATE $x_{i}^{new} = (1-\alpha)*P_{i}*x + \frac{\alpha}{\#[x]}$
-    \IF{$|x_{i}^{new} - x_{i}| > \delta$}
-		\STATE $x_{i} = x_{i}^{new}$
-		\STATE add $x_{j}$ onto worklist : $\forall x_{i} \to x_{j}$
-	\ENDIF
-  \ENDIF
-  \ENDWHILE
-\end{algorithmic}
-\end{algorithm}
-\newline
+
+\section{Results}
+The different methods had varying quantitative and qualitative results. These included the time to complete, speedup, scalability, and ease of coding. 
 
 \subsection{Power Iteration Results}
 We implemented the the of the algorithms discussed in \cite{Joyce} in the distributed setting using MPI and MPI with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. A summary table is below.
@@ -205,7 +194,24 @@ We implemented the the of the algorithms discussed in \cite{Joyce} in the distri
 	Delta Update & 30 & 19.5 \\
 \end{tabular}
 \end{center}
-\section{Next Steps}
+\subsection{ADMM Results Compared to other Linear methods}
+Below are the inital results for ADMM programmed in Matlab for a simple data set (a disconnected synthetic 11 node graph). 
+
+\begin{center}
+\captionof{table}{Linear Method Table}
+\begin{tabular}{l || r}
+	\hline\hline
+	\multicolumn{2}{c}{5 iter results} \\
+	\hline\hline
+	Method  & $\|\hat{x} - x\| $ \\
+	\hline
+	GMRES & 0.0047  \\
+	BiCGSTAB & 0.0056  \\
+	ADMM & 0.0079  \\
+\end{tabular}
+\end{center}
+\newpage
+\section{Future Work}
 
 Now that we have seen the value of both ADMM and data-driven PageRank, our next steps will involve parallelizing using MPI
 
@@ -215,18 +221,7 @@ Now that we have seen the value of both ADMM and data-driven PageRank, our next 
 	\item Collect all results and provide conclusions about all methods and the value that each provides.
 \end{enumerate}
 
-\subsection{Load Balancing}
-We will also implement load balacing with both ADMM and the delta updating as described below.
 
-\begin{enumerate}
-	\item ADMM: each iteration, we will determine if the new local variable value has changed significantly. If so, it will be pushed to the master worklist to be operated on for the next iteration. If not, it will be removed from the worklist.
-	\item Delta Updating: similarly, each iteration will check the updated value of the node and push it and its out-neighbors to the master worklist if above a certain threshold. This master worklist will have duplicated removed and will divide the work evenly across all computing nodes. Ideally, the more connected nodes would be sent to the same compute node so some type of clustering may be beneficial for this operation.
-\end{enumerate}
-
-\section{Related Work}
-
-
-\section{Results}
 
 \begin{thebibliography}{1}
 

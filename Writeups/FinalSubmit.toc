@@ -1,10 +1,12 @@
 \contentsline {section}{\numberline {1}Introduction}{2}
-\contentsline {section}{\numberline {2}Linear System Approach}{2}
-\contentsline {subsection}{\numberline {2.1}ADMM}{3}
-\contentsline {subsection}{\numberline {2.2}ADMM Results Compared to other Linear methods}{4}
-\contentsline {section}{\numberline {3}Power Iteration Approach - Delta Updating}{5}
-\contentsline {subsection}{\numberline {3.1}Power Iteration Results}{5}
-\contentsline {section}{\numberline {4}Next Steps}{6}
-\contentsline {subsection}{\numberline {4.1}Load Balancing}{6}
-\contentsline {section}{\numberline {5}Related Work}{6}
-\contentsline {section}{\numberline {6}Results}{6}
+\contentsline {section}{\numberline {2}Related Work}{2}
+\contentsline {section}{\numberline {3}Algorithms and Implementation}{2}
+\contentsline {subsection}{\numberline {3.1}Power Iteration}{2}
+\contentsline {subsection}{\numberline {3.2}Data-Driven Pagerank}{2}
+\contentsline {subsection}{\numberline {3.3}Linear System Approach}{3}
+\contentsline {subsection}{\numberline {3.4}ADMM}{4}
+\contentsline {subsection}{\numberline {3.5}Load Balancing}{5}
+\contentsline {section}{\numberline {4}Results}{5}
+\contentsline {subsection}{\numberline {4.1}Power Iteration Results}{5}
+\contentsline {subsection}{\numberline {4.2}ADMM Results Compared to other Linear methods}{6}
+\contentsline {section}{\numberline {5}Future Work}{7}
