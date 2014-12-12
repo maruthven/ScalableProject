@@ -1,13 +1,13 @@
 \contentsline {section}{\numberline {1}Introduction}{2}
 \contentsline {section}{\numberline {2}Related Work}{2}
-\contentsline {section}{\numberline {3}Algorithms and Implementation}{2}
-\contentsline {subsection}{\numberline {3.1}Topology-driven Power Iteration}{2}
-\contentsline {subsection}{\numberline {3.2}Data-Driven Pagerank}{3}
+\contentsline {section}{\numberline {3}Algorithms and Implementation}{3}
+\contentsline {subsection}{\numberline {3.1}Topology-driven Power Iteration}{3}
+\contentsline {subsection}{\numberline {3.2}Data-Driven Pagerank}{4}
 \contentsline {subsection}{\numberline {3.3}Linear System Approach}{7}
 \contentsline {subsection}{\numberline {3.4}ADMM}{8}
 \contentsline {section}{\numberline {4}Load Balancing}{9}
 \contentsline {section}{\numberline {5}Results}{9}
-\contentsline {subsection}{\numberline {5.1}Power Iteration Results}{9}
-\contentsline {subsection}{\numberline {5.2}ADMM Results Compared to other Linear methods}{9}
-\contentsline {section}{\numberline {6}Future Work}{9}
+\contentsline {subsection}{\numberline {5.1}Power Iteration Results}{10}
+\contentsline {subsection}{\numberline {5.2}ADMM Results Compared to other Linear methods}{10}
+\contentsline {section}{\numberline {6}Future Work}{10}
 \contentsline {section}{\numberline {7}Conclusion}{10}

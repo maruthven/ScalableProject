@@ -1,17 +1,19 @@
 %\documentclass[a4paper,10pt]{article}
 %\usepackage[utf8x]{inputenc}
-%\usepackage{amsmath} 
-%\usepackage{mathtools}
-%\usepackage{amssymb}
-%\usepackage{algorithm,algorithmic}
-%\usepackage{caption}
+
 
 \documentclass[letterpaper,12pt,onecolumn]{article}
 \usepackage[margin=1in]{geometry} %one inch margins
 \usepackage{amsmath,graphicx}
-\usepackage[chapter]{algorithmic}
+\usepackage{algorithmic}
 \usepackage{algorithm}
 
+
+\usepackage{amsmath} 
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{algorithm,algorithmic}
+\usepackage{caption}
 
 \geometry{verbose,margin=1in}
 
@@ -23,13 +25,20 @@
 \tableofcontents
 \pagebreak
 \section{Introduction}
-The purpose of this project is to investigate distributed PageRank by applying Pagerank methods currently in use in the multi-thread case and implement it in the distributed setting. It is to determine if these methods can be scaled to multi-machine systems. We also take a method that has already proven to be effective in the distributed setting and apply it to the Pagerank problem (ADMM <-- what does this stand for \cite{ADMM}). Immediately below is a more detailed description of each approach. The primary metrics for performace will be: speedup, scalability, and ease of implementation, all of which will be explained in the results section. The last metric is included to suggest that ease of coding and understanding of a method has an impact on the adoption rate in industry and therefore should be included in this investigation.
+The purpose of this project is to investigate distributed PageRank by applying Pagerank methods currently in use in the multi-thread case and implement it in the distributed setting. It is to determine if these methods can be scaled to multi-machine systems. We also take a method that has already proven to be effective in the distributed setting and apply it to the Pagerank problem Alternating Direction Method of Multipliers (ADMM) \cite{ADMM}). Immediately below is a more detailed description of each approach. The primary metrics for performace will be: speedup, scalability, and ease of implementation, all of which will be explained in the results section. The last metric is included to suggest that ease of coding and understanding of a method has an impact on the adoption rate in industry and therefore should be included in this investigation.
 
 We chose to investigate ADMM \cite{ADMM} because it would have higher performance for ease of coding and understanding. We applied ADMM to the linear form of the Pagerank problem (Ax=b), but it is more difficult to apply a data-driven approach to the separated minimization problems, so to investigate data-driven approaches outlined in~\cite{Joyce}, we implemented data-driven power iteration with MPI and openMP. Typical power iteration will be refered to as Topology driven. The data-driven methods were Pull, Pull-Push, and Push based. The details of each permutation of the data-driven methods will be discussed in following sections. Because each method is implemented on distributed nodes on a big dataset, each method took advantage of the separate memories, and divided the connection matrices between nodes. There, we implemented a static load balancing regime based on amount of nonzeros in the assigned rows, which proved to be more efficient than load balancing on the number of x elements to calculate. Load balancing will be explained more in the following sections. 
 
 The methods' performance will be compared on total time, speed up, and scalability over varying amount of nodes (MPI), and cores per node (openMP). And finally, we will go over the limitations of the methods in MPI and openMP, and future work. 
 
 \section{Related Work}
+
+\begin{enumerate}
+  \item \cite{Fast Parallel} - This paper focuses on iterative solvers for the formulation Ax=b using well known methods including but not limited to: GMRES, BiCGSTAB, CGS, Chebychev iterations, along with Jacobi iteration methods. Their results indicated that normal Power Iteration and Jacobi methods almost always performed better than the other linear solvers and although we do not have access to their data sets nor machines, we will attempt to generally compare our speedup curves to theirs and expect some correlation. We will also expect that our power iteration and data-driven approaches will perform better than our ADMM solver for Ax=b as they did for \cite{Fast Parallel}.
+  \item \cite{MPIPR} - The method descibed in this paper, used a weighted graph so we would expect the implementation to be slightly different. However, the primary take=away from this paper is that we should expect the compute time to decrease as the MPI processes increases, up to a certain point. As seen in the figure presented in the paper, with a 1M node graph, after about 30 cores, the solve time starting to trend slightly upward. We assume this increase in solve time is primarily due to the increase in message passing overhead. This would suggest that we should see similar results and also that there may be an optimal core number depending on the size of the data. 
+  \item \cite{Joyce} - We have worked extremely closely with Joyce Whang as many of our algorithms were taken directly from her research paper and other members of her research group. Aside of our ADMM solver, our paper focuses on implementing her ideas in a distributed setting (as her implementation focuses only on the multi-thread case) either to confirm or deny the idea that her algorithms could also be effective in a distributed setting.
+\end{enumerate}
+
 
 \section{Algorithms and Implementation}
 
@@ -173,7 +182,7 @@ Although MPI allowed for a distributed Pagerank algorithm, there were a couple o
 NOTE: THIS NEEDS MORE INFORMATION 
 
 \subsection{Linear System Approach}
-This approach requires that we form the Pagerank problem into a linear system (Ax=b) in which case solving for x would provide the list of Pagerank values. Below is a simple derivation taken from \cite{Fast Parallel}.
+This approach requires that we form the Pagerank problem into a different linear system (Ax=b) where we fundamentally look at methods of iterating or directly solving for an inverse to solve for x which would would provide the list of Pagerank values. Below is a simple derivation taken from \cite{Fast Parallel}.
 \begin{center}
 \begin{align}
 	P' &= P + dv^{T} \\
@@ -217,7 +226,7 @@ We now have Pagerank in a linear form (Ax=b), where A = I-c$P^{T}$ and kv = b. I
 \subsection{ADMM}
 
 Many of the articles we encountered for solving parallel pagerank in the linear form used Jacobi iteration or some Krylov Subspace method (GMRES, BiCGSTAB, etc), but we attempted to implement something we were introduce to in this course, namely ADMM \cite{ADMM}. This is an extremely simple way to parallelize a linear solve. This process attempts to split the linear problem into subsections, solve separately, and combine the information in a very specific way. 
-We will compare these results to the implementation of GMRES and BiCGSTAB for the same problem parallelizing using PETSc \cite{Power Law Graphs}. We expect ADMM to have worse performance, measured by speedup, but we would like to quantify the loss in accuracy/time relative to the ease of implementation and scalability.
+We will compare these results to the implementation of GMRES (Generalized Minimal RESidual method) and BiCGSTAB (BiConjugate Gradient method with STABilization) for the same problem parallelizing using PETSc (a software with great tools for parallizing linear solvers) \cite{Power Law Graphs}. We expect ADMM to have worse performance, measured by speedup, but we would like to quantify the loss in accuracy/time relative to the ease of implementation and scalability.
 \newline
 \linebreak
 Below is a brief description of the ADMM idea and algorithm \cite{ADMM}.
@@ -237,8 +246,15 @@ Our origninal minimization of Ax-b with a certain norm and regulariztion on x no
 	&subject \: \: \: to \: \: \: x_{i} - z = 0 \: \: \: \forall i
 \end{align}
 \end{center}
-Where $x_{i}$ are local variables that we force to match the global solution z at each step and N is the number of processes used to solve the problem.
+Where $x_{i}$ are local variables that we force to match the global solution z at each step and N is the number of processes used to solve the problem. This method also includes an 'augmented lagragian' term. This term is used to bring robustness to the dual ascent problem and result in convergence without criteria like strict convexity or finiteness of the function. This is discussed in much greater detail in \cite{ADMM}. Below is the augemented lagrangian which is used to derive the resulting algorithm.
 \newline
+\begin{center}
+  \begin{align}
+		L_{\rho}(x,y) &= f(x) + y^{T}(Ax-b) + \frac{\rho}{2}\|Ax - b\|_{2}^{2} \\
+  \end{align}
+\end{center}
+
+
 The resulting algorithm, using the augmented lagrangian presented in the ADMM method \cite{ADMM}, is as follows:
 
 \begin{center}
@@ -303,12 +319,12 @@ Below are the inital results for ADMM programmed in Matlab for a simple data set
 
 \section{Future Work}
 
-Now that we have seen the value of both ADMM and data-driven PageRank, our next steps will involve parallelizing using MPI
+Now that we have seen the value of both ADMM and data-driven PageRank, the next steps would be the following.
 
 \begin{enumerate}
-	\item Parallelize the ADMM method using MPI and compare the results to running GMRES and BiCGSTAB with PETSc
-	\item Parallelize the data-driven PageRank problem using MPI and compare these results to other parallel Power Iteration approaches
-	\item Collect all results and provide conclusions about all methods and the value that each provides.
+  \item Optimize our MPI approach with the data-driven methods in an attempt to get the results to match the multi-thread implementation of \cite{Joyce}.
+  \item Take the results of this investiation as an indicator that expanding the galois code from \cite{Joyce} to a distributed setting might be valuable.
+  \item Apply ADMM to with other minimization solver as an attempt to find the optimal solver.
 \end{enumerate}
 
 
