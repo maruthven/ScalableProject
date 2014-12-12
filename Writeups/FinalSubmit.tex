@@ -9,7 +9,8 @@
 \documentclass[letterpaper,12pt,onecolumn]{article}
 \usepackage[margin=1in]{geometry} %one inch margins
 \usepackage{amsmath,graphicx}
-\usepackage[chapter]{algorithm,algorithmic}
+\usepackage[chapter]{algorithmic}
+\usepackage{algorithm}
 
 
 \geometry{verbose,margin=1in}
@@ -59,6 +60,8 @@ This is the classic implmentation for calculating Pagerank, seen in algorithm~\r
 \end{algorithmic}
 \end{algorithm}
 
+In the topological algorithm, every $x_v$ is updated. Each node computes a subsection of $\mathbf{x}$, named $\mathbf{x_r}$, then all of the nodes combine their new result in batch to create a new $\mathbf{x}$ in order to continue to compute the newer values of $\mathbf{x_r}$. All of the recomputation within each node only updates the current $x_v$, this creates for a thread safe algorithm.
+
 \subsection{Data-Driven Pagerank}
 In addition to the ADMM implementation, we implemented power iteration, as well as three permutations of the data-driven pagerank method (pull, pull-push, and push). The data-driven method (taken from \cite{Joyce}) aims to minimize unnecessary computation by only updating pageranks of elements whose incoming connections were upated to a satisfactory degree. 
 
@@ -66,13 +69,13 @@ In addition to the ADMM implementation, we implemented power iteration, as well 
 \caption{Pull Data-driven Pagerank}
 \label{alg:pull}
 \begin{algorithmic}[1]
-  \STATE Input: graph $P_{r} = (V_r, E_r)$, $\alpha$, $\epsilon$
+  \STATE Input: graph $P_{c} = (V_c, E_c)$, $\alpha$, $\epsilon$
   \STATE Output: Pagerank $\mathbf{x}$
-  \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$ and $\mathbf{t_r} = true \times \mathbf{e_r}$
-  \STATE $\exists  \medspace \mathbf{x_r}$ in $\mathbf{x}$ as $P_r$ is to $P$
+  \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$ and $\mathbf{t_c} = true \times \mathbf{e_c}$
+  \STATE $\exists  \medspace \mathbf{x_c}$ in $\mathbf{x}$ as $P_c$ is to $P$
   \WHILE{$\exists \medspace v \medspace s.t. \medspace t_v = true$}
 	\STATE $t^{new} = false \times \mathbf{e}$
-	\FOR{$v \in V_r$}
+	\FOR{$v \in V_c$}
 		\IF{$t_v = true$}
 			\STATE $x_{v}^{new} = \alpha + (1 - \alpha) \sum_{w \in S_v} \frac{x_{w}}{|T_w|} $
 			\IF{ $| x_{v}^{new} - x_{v} | \geq \epsilon  $}
@@ -83,32 +86,34 @@ In addition to the ADMM implementation, we implemented power iteration, as well 
 			\ENDIF
 		\ENDIF
 	\ENDFOR
-	\STATE sync all $\mathbf{x_r}$ between nodes
+	\STATE sync all $\mathbf{x_c}$ between nodes
 	\STATE logical or all $t = t^{new}$ between nodes
   \ENDWHILE
   \STATE $\mathbf{x} = \frac{\mathbf{x} }{\|x\|_{1}}$
 \end{algorithmic}
 \end{algorithm}
 
+
+The Pull data-driven method in algorithm~\ref{alg:pull} selectively updates the values of $x_v$ based on if an incoming connected node updated itself above the threshold, $\epsilon$. This is determined by the array $t_c$, which is a set of $c$ indices for that node. In the computation of $x_v$, if the difference between the new and old value is above $\epsilon$, set all outgoing nodes' $t_w$ to true. Notice that each element, $v$, updates its value, $x_v$, and indices of $t$ both in and out of set $c$. This requires the syncing of all copies of $t^{new}$ between nodes with a logical or. Additionally, this algorithm accesses more memory by accessing incoming nodes' pagerank and outgoing nodes' $t^{new}$.
+
 \begin{algorithm}
 \caption{Pull-Push Data-driven Pagerank}
 \label{alg:pullpush}
 \begin{algorithmic}[1]
-  \STATE Input: graph $P_{r} = (V_r, E_r)$, $\alpha$, $\epsilon$
+  \STATE Input: graph $P_{c} = (V_c, E_c)$, $\alpha$, $\epsilon$
   \STATE Output: Pagerank $\mathbf{x}$
   \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$
-  \STATE $\exists  \medspace \mathbf{x_r}$ in $\mathbf{x}$ as $P_r$ is to $P$
+  \STATE $\exists  \medspace \mathbf{x_c}$ in $\mathbf{x}$ as $P_c$ is to $P$
   \STATE Initialize $\mathbf{r} = \mathbf{0}$
-  \FOR{$v \in V_r$}
+  \FOR{$v \in V_c$}
 	\FOR{$w \in S_v$}
 		\STATE $r_v = r_v + \frac{1}{|T_w|}$
 	\ENDFOR
 	\STATE $r_v = (1 - \alpha)\alpha r_v$
   \ENDFOR
-
   \WHILE{$\exists \medspace v \medspace s.t. \medspace r_v \geq \epsilon$}
 	\STATE $r^{new} = \mathbf{0}$
-	\FOR{$v \in V_r$}
+	\FOR{$v \in V_c$}
 		\IF{$r_v \geq \epsilon$}
 			\STATE $x_{v} = \alpha + (1 - \alpha) \sum_{w \in S_v} \frac{x_{w}}{|T_w|} $
 			\FOR{$w \in T_v$}
@@ -118,12 +123,54 @@ In addition to the ADMM implementation, we implemented power iteration, as well 
 			\STATE $r_v^{new} = r_v^{new} + r_v$
 		\ENDIF
 	\ENDFOR
-	\STATE sync all $\mathbf{x_r}$ between nodes
-	\STATE add all and scatter $ r_r = r^{new}$ between nodes
+	\STATE sync all $\mathbf{x_c}$ between nodes
+	\STATE add all and scatter $ r_c = r^{new}$ between nodes
   \ENDWHILE
   \STATE $\mathbf{x} = \frac{\mathbf{x} }{\|x\|_{1}}$
 \end{algorithmic}
 \end{algorithm}
+
+The Pull-Push data-driven method in algorithm~\ref{alg:pullpush} selectively updates the values of $x_v$ based on if its residual is above a threshold, $\epsilon$. The residuals are accounted for in the $\mathbf{r}$ vector and batch updated to transfer residual values between nodes. Notice that each element, $v$, updates its value, $x_v$, and indices of $r$ both in and out of set $c$. This requires the syncing of all copies of $r^{new}$ between nodes by summing. Additionally, this algorithm accesses more memory by accessing incoming nodes' pagerank and outgoing nodes' $r^{new}$.
+
+\begin{algorithm}
+\caption{Push Data-driven Pagerank}
+\label{alg:push}
+\begin{algorithmic}[1]
+  \STATE Input: graph $P_{c} = (V_c, E_c)$, $\alpha$, $\epsilon$
+  \STATE Output: Pagerank $\mathbf{x}$
+  \STATE Initialize $\mathbf{x} = \alpha \mathbf{e}$
+  \STATE $\exists  \medspace \mathbf{x_c}$ in $\mathbf{x}$ as $P_c$ is to $P$
+  \STATE Initialize $\mathbf{r} = \mathbf{0}$
+  \FOR{$v \in V_c$}
+	\FOR{$w \in S_v$}
+		\STATE $r_v = r_v + \frac{1}{|T_w|}$
+	\ENDFOR
+	\STATE $r_v = (1 - \alpha)\alpha r_v$
+  \ENDFOR
+  \WHILE{$\exists \medspace v \medspace s.t. \medspace r_v \geq \epsilon$}
+	\STATE $r^{new} = \mathbf{0}$
+	\FOR{$v \in V_c$}
+		\IF{$r_v \geq \epsilon$}
+			\STATE $x_{v} = x_{v} + r_v $
+			\FOR{$w \in T_v$}
+				\STATE $r_w^{new} = r_w^{new} + \frac{r_v \alpha}{|T_v|}$
+			\ENDFOR
+		\ELSE
+			\STATE $r_v^{new} = r_v^{new} + r_v$
+		\ENDIF
+	\ENDFOR
+	\STATE add all and scatter $ r_c = r^{new}$ between nodes
+  \ENDWHILE
+\STATE sync all $\mathbf{x_c}$ between nodes
+  \STATE $\mathbf{x} = \frac{\mathbf{x} }{\|x\|_{1}}$
+\end{algorithmic}
+\end{algorithm}
+
+The Push data-driven method in algorithm~\ref{alg:push} selectively updates the values of $x_v$ based on if its residual is above a threshold, $\epsilon$. It updates $x_v$ by only using $r_v$. This accesses less memory by bypassing fetching all of the incoming nodes current values $x_w$. The residuals are accounted for in the $\mathbf{r}$ vector and batch updated to transfer residual values between nodes. Notice that each element, $v$, updates its value, $x_v$, and indices of $r$ both in and out of set $c$. This requires the syncing of all copies of $r^{new}$ between nodes by summing. 
+
+Although MPI allowed for a distributed Pagerank algorithm, there were a couple of restrictions on the implementation because of the MPI and openMP framework we chose to use. When syncing values between nodes, MPI requires all nodes to simultaneously request and send the information they want. This means that all of the independent nodes have to update the values in batch. This is was not ideal because it meant that partial residuals were silowed in different nodes. The distributedness of each residual disallows for a priority queue and asynchronis updating. 
+
+NOTE: THIS NEEDS MORE INFORMATION 
 
 \subsection{Linear System Approach}
 This approach requires that we form the Pagerank problem into a linear system (Ax=b) in which case solving for x would provide the list of Pagerank values. Below is a simple derivation taken from \cite{Fast Parallel}.
@@ -233,34 +280,9 @@ First we implemented our methods where each node had the same amount of X's to c
 The different methods had varying quantitative and qualitative results. These included the time to complete, speedup, scalability, and ease of coding. 
 
 \subsection{Power Iteration Results}
-We implemented the the of the algorithms discussed in \cite{Joyce} in the distributed setting using MPI and MPI with openMP, and compared the time to convergence. On the A dataset from HW4, the pagerank values converged in fewer iterations (25 to 20) and on average, takes less time to run one iteration (0.189 to 0.095 seconds) running on 16 threads. This resulted in a total calculation time of 4.72 seconds for the baseline power iterations and 1.90 seconds for the delta method. A summary table is below.
-
-\begin{center}
-\caption{Power Iteration - A}
-\begin{tabular}{l || c | r}
-	\hline
-	\multicolumn{3}{c}{Method Comparison} \\
-	\hline\hline
-	Method & Iteration Count & Time(s) \\
-	\hline\hline
-	Power Iteration & 25 & 4.72 \\
-	Delta Update & 20 & 1.90 \\
-\end{tabular}
-\end{center}
+This is where graphs would go 
 
 
-\begin{center}
-\captionof{table}{Power Iteration - Friendster}
-\begin{tabular}{l || c | r}
-	\hline
-	\multicolumn{3}{c}{Method Comparison} \\
-	\hline\hline
-	Method & Iteration Count & Time(s) \\
-	\hline\hline
-	Power Iteration & 23 & 49.6 \\
-	Delta Update & 30 & 19.5 \\
-\end{tabular}
-\end{center}
 \subsection{ADMM Results Compared to other Linear methods}
 Below are the inital results for ADMM programmed in Matlab for a simple data set (a disconnected synthetic 11 node graph). 
 
