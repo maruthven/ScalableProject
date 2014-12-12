@@ -1,19 +1,9 @@
 This is BibTeX, Version 0.99dThe top-level auxiliary file: FinalSubmit.aux
-White space in argument---line 5 of file FinalSubmit.aux
- : \citation{Fast
- :                Parallel}
-I'm skipping whatever remains of this command
-White space in argument---line 6 of file FinalSubmit.aux
- : \citation{Fast
- :                Parallel}
-I'm skipping whatever remains of this command
-White space in argument---line 27 of file FinalSubmit.aux
+White space in argument---line 28 of file FinalSubmit.aux
  : \citation{Power
  :                 Law Graphs}
 I'm skipping whatever remains of this command
 The style file: IEEEbib.bst
 Database file #1: refs.bib
-Name 1 in "Joyce Jiyoung Whang, Andrew Lenharth, and Inderjit S. Dhillon" has a comma at the end for entry Joyce
-while executing---line 1012 of file IEEEbib.bst
 Warning--empty institution in FastParallel
-(There were 4 error messages)
+(There was 1 error message)

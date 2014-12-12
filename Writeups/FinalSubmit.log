@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  12 DEC 2014 16:06
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  12 DEC 2014 16:18
 entering extended mode
 **C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
 (C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
@@ -242,28 +242,18 @@ LaTeX Font Info:    ... okay on input line 17.
 [1
 
 {C:/Users/mar3939/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
+[2] [3]
 
-LaTeX Warning: Citation `Fast Parallel' on page 2 undefined on input line 32.
+LaTeX Warning: Reference `Joyce' on page 4 undefined on input line 178.
 
-
-LaTeX Warning: Citation `Fast Parallel' on page 2 undefined on input line 32.
-
-[2]
-
-LaTeX Warning: Reference `distributed' on page 3 undefined on input line 39.
-
-[3] [4] [5] [6]
-
-LaTeX Warning: Reference `Joyce' on page 7 undefined on input line 178.
-
-
+[4] [5] [6] [7]
 Underfull \hbox (badness 10000) in paragraph at lines 194--198
 
  []
 
-[7]
+[8]
 
-LaTeX Warning: Citation `Power Law Graphs' on page 8 undefined on input line 22
+LaTeX Warning: Citation `Power Law Graphs' on page 9 undefined on input line 22
 9.
 
 
@@ -276,24 +266,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 249--251
 
  []
 
-[8] [9] [10]
+[9] [10] [11]
 (C:\Users\mar3939\Documents\GitHub\ScalableProject\Writeups\FinalSubmit.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 17--21
+Underfull \hbox (badness 10000) in paragraph at lines 22--26
 []\OT1/cmr/m/n/12 Xiaoyi (Eric) Li,  ``Par-al-lel pager-ank com-pu-ta-tion us-i
 ng mpi,''
  []
 
-) [11]
+) [12]
 (C:\Users\mar3939\Documents\GitHub\ScalableProject\Writeups\FinalSubmit.aux)
 
 LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 2533 strings out of 493921
- 33530 string characters out of 3144870
- 106852 words of memory out of 3000000
- 5813 multiletter control sequences out of 15000+200000
+ 2532 strings out of 493921
+ 33515 string characters out of 3144870
+ 115855 words of memory out of 3000000
+ 5812 multiletter control sequences out of 15000+200000
  10901 words of font info for 39 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  27i,9n,32p,1346b,706s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -311,9 +301,9 @@ KTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX
  2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2
 .9/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/
 fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on FinalSubmit.pdf (11 pages, 185813 bytes).
+Output written on FinalSubmit.pdf (12 pages, 188189 bytes).
 PDF statistics:
- 94 PDF objects out of 1000 (max. 8388607)
+ 97 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
