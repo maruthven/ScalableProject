@@ -9,12 +9,6 @@
 \usepackage{algorithm}
 
 
-\usepackage{amsmath} 
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{algorithm,algorithmic}
-\usepackage{caption}
-
 \geometry{verbose,margin=1in}
 
 \title{Distributed PageRank - Final Report}
@@ -33,18 +27,22 @@ The methods' performance will be compared on total time, speed up, and scalabili
 
 \section{Related Work}
 
-\begin{enumerate}
-  \item \cite{Fast Parallel} - This paper focuses on iterative solvers for the formulation Ax=b using well known methods including but not limited to: GMRES, BiCGSTAB, CGS, Chebychev iterations, along with Jacobi iteration methods. Their results indicated that normal Power Iteration and Jacobi methods almost always performed better than the other linear solvers and although we do not have access to their data sets nor machines, we will attempt to generally compare our speedup curves to theirs and expect some correlation. We will also expect that our power iteration and data-driven approaches will perform better than our ADMM solver for Ax=b as they did for \cite{Fast Parallel}.
-  \item \cite{MPIPR} - The method descibed in this paper, used a weighted graph so we would expect the implementation to be slightly different. However, the primary take=away from this paper is that we should expect the compute time to decrease as the MPI processes increases, up to a certain point. As seen in the figure presented in the paper, with a 1M node graph, after about 30 cores, the solve time starting to trend slightly upward. We assume this increase in solve time is primarily due to the increase in message passing overhead. This would suggest that we should see similar results and also that there may be an optimal core number depending on the size of the data. 
-  \item \cite{Joyce} - We have worked extremely closely with Joyce Whang as many of our algorithms were taken directly from her research paper and other members of her research group. Aside of our ADMM solver, our paper focuses on implementing her ideas in a distributed setting (as her implementation focuses only on the multi-thread case) either to confirm or deny the idea that her algorithms could also be effective in a distributed setting.
-\end{enumerate}
+Pagerank is the algorithm that Larry Page and Sergey Brin researched, and subsequently used their research to form the company Google. Since then, many researchers have focused on improving different aspects of Pagerank. Our project focused on different implementations of Pagerank to compare and contrast implementations' performance in a distributed setting. 
 
+Iterative solvers for the formulation Ax=b using well known methods including but not limited to: GMRES, BiCGSTAB, CGS, Chebychev iterations, along with Jacobi iteration methods~\cite{Fast Parallel}. Their results indicated that normal Power Iteration and Jacobi methods almost always performed better than the other linear solvers and although we do not have access to their data sets or machines, we will attempt to generally compare our speedup curves to theirs and expect some correlation. We will also expect that our power iteration and data-driven approaches will perform better than our ADMM solver for Ax=b as they did for \cite{Fast Parallel}.
+ 
+Previous implementations of Pagerank with MPI~\cite{MPIPR} showed that it is expected for compute time to decrease as the number of MPI processes increase to a certain point. As seen in the figure presented in the paper, with a 1M node graph, after about 30 cores, the solve time starting to trend slightly upward. We assume this increase in solve time is primarily due to the increase in message passing overhead. This would suggest that we should see similar results and also that there may be an optimal core number depending on the size of the data. 
+
+We have worked extremely closely with Joyce Whang as many of our algorithms were taken directly from her research paper and other members of her research group~\cite{Joyce}. In her submitted paper, the algorithms proposed are implemented on a Galois multithread system. Our data-driven implementations are taken directly from her paper and implemented with the MPI and openMP frameworks. This extraction to the distrubuted setting is to confirm or deny the idea that her algorithms could also be effective across nodes.
+
+\section{Load Balancing}
+Before this paper details the different algorithms we implemented, it will talk about load balancing. Load balancing on distributed systems could be scheduled in task or job manner, as discussed in~\ref{distributed}, where .First we implemented our methods where each node had the same amount of X's to compute. To allow for more equality in the amount of computations each node had to do, our implementations moved to a method where each node were assigned a continuous set of indices where each node had the same amount of nonzero connections between the indices and other nodes. 
 
 \section{Algorithms and Implementation}
 
-This section discusses the implementations of different methods for computing pagerank. This includes power iteration, ADMM, and data-driven approach. 
+This section discusses the implementations of different methods for computing pagerank. This includes topological, data-driven, and ADMM Pagerank. 
 
-\subsection{Topology-driven Power Iteration}
+\subsection{Topology-driven}
 This is the classic implmentation for calculating Pagerank, seen in algorithm~\ref{alg:top} . It is straight forward, but recalculates all X values every iteration. This could be redundant on a large percentage of the X indices, and therefore, it could waste computational power. 
 
 \begin{algorithm}
@@ -177,12 +175,14 @@ The Pull-Push data-driven method in algorithm~\ref{alg:pullpush} selectively upd
 
 The Push data-driven method in algorithm~\ref{alg:push} selectively updates the values of $x_v$ based on if its residual is above a threshold, $\epsilon$. It updates $x_v$ by only using $r_v$. This accesses less memory by bypassing fetching all of the incoming nodes current values $x_w$. The residuals are accounted for in the $\mathbf{r}$ vector and batch updated to transfer residual values between nodes. Notice that each element, $v$, updates its value, $x_v$, and indices of $r$ both in and out of set $c$. This requires the syncing of all copies of $r^{new}$ between nodes by summing. 
 
-Although MPI allowed for a distributed Pagerank algorithm, there were a couple of restrictions on the implementation because of the MPI and openMP framework we chose to use. When syncing values between nodes, MPI requires all nodes to simultaneously request and send the information they want. This means that all of the independent nodes have to update the values in batch. This is was not ideal because it meant that partial residuals were silowed in different nodes. The distributedness of each residual disallows for a priority queue and asynchronis updating. 
+Although MPI allowed for a distributed Pagerank algorithm, there were a couple of restrictions on the implementation because of the MPI and openMP framework we chose to use. When syncing values between nodes, MPI requires all nodes to simultaneously request and send the information they require. This means that all of the independent nodes have to update the values in batch. The original implementation in Galois~\ref{Joyce} utilized the asynchronisity of value updates unique to Galois to be able to have threadsafe updates, and shared residual values between threads. This is not a feature in openMP or MPI. In openMP, each thread kept track of its own residuals for the whole set of indices, and reduced after all were calculated within each node, then shared its values to sum up all of the nodes' residual values. These 2 steps of synchronization were not necessary in the Galois implementation. Additionally, the batch update of residuals and the boolean update vector meant that a meaningful worklist was impossible to keep without the vectors from the other nodes. This meant, to selectively compute a new value the Pagerank, each node had to go through each value of the residual or update vectors to check if it met the standards of update. 
+
+The new vectors of information about each index needed to be passed between nodes. More information to send corresponds with a longer amount of time spend on sending data. In the case of algorithms~\ref{alg:pull} and~\ref{alg:pullpush}, they both send $\mathbf{x_c}$ and an update vector. This does not scale well for big 
 
 NOTE: THIS NEEDS MORE INFORMATION 
 
 \subsection{Linear System Approach}
-This approach requires that we form the Pagerank problem into a different linear system (Ax=b) where we fundamentally look at methods of iterating or directly solving for an inverse to solve for x which would would provide the list of Pagerank values. Below is a simple derivation taken from \cite{Fast Parallel}.
+This approach requires that we form the Pagerank problem into a different linear system (Ax=b) where we fundamentally look at methods of iterating or directly solving for an inverse to solve for x which would would provide the list of Pagerank values. Below is a simple derivation taken from \cite{FastParallel}.
 \begin{center}
 \begin{align}
 	P' &= P + dv^{T} \\
@@ -288,8 +288,6 @@ Where S is defined componend-wise in the following way:
 	\end{equation}
 \end{center}
 
-\section{Load Balancing}
-First we implemented our methods where each node had the same amount of X's to compute. To allow for more equality in the amount of computations each node had to do, our implementations moved to a method where each node were assigned a continuous set of indices where each node had the same amount of nonzero connections between the indices and other nodes. 
 
 
 \section{Results}
@@ -300,59 +298,41 @@ This is where graphs would go
 
 
 \subsection{ADMM Results Compared to other Linear methods}
-Below are the inital results for ADMM programmed in Matlab for a simple data set (a disconnected synthetic 11 node graph). 
-
-\begin{center}
-\captionof{table}{Linear Method Table}
-\begin{tabular}{l || r}
-	\hline\hline
-	\multicolumn{2}{c}{5 iter results} \\
-	\hline\hline
-	Method  & $\|\hat{x} - x\| $ \\
-	\hline
-	GMRES & 0.0047  \\
-	BiCGSTAB & 0.0056  \\
-	ADMM & 0.0079  \\
-\end{tabular}
-\end{center}
 
 
 \section{Future Work}
-
-Now that we have seen the value of both ADMM and data-driven PageRank, the next steps would be the following.
-
-\begin{enumerate}
-  \item Optimize our MPI approach with the data-driven methods in an attempt to get the results to match the multi-thread implementation of \cite{Joyce}.
-  \item Take the results of this investiation as an indicator that expanding the galois code from \cite{Joyce} to a distributed setting might be valuable.
-  \item Apply ADMM to with other minimization solver as an attempt to find the optimal solver.
-\end{enumerate}
 
 
 \section{Conclusion}
 
 This bib actually needs to be in a separate bib file
-\begin{thebibliography}{1}
+\vfill\pagebreak
+\bibliographystyle{IEEEbib}
+\bibliography{refs}
 
-\bibitem{Power Law Graphs} David Gleich, et al. {\em Scalable Computing for Power Law Graphs: Experience with Parallel PageRank}
 
-\bibitem{Fast Parallel} David Gleich, et al. {\em Fast Parallel PageRank: A Linear System Approach} 
+%\begin{thebibliography}{1}
 
-\bibitem{ADMM} Stephen Boyd, et al. {\em Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers} 
+%\bibitem{PowerLawGraphs} David Gleich, et al. {\em Scalable Computing for Power Law Graphs: Experience with Parallel PageRank}
 
-\bibitem{Joyce} Joyce Whang, et al. {\em Scalable Data-driven PageRank: Algorithms, System Issues '\&' Lessons Learned}
+%\bibitem{FastParallel} David Gleich, et al. {\em Fast Parallel PageRank: A Linear System Approach} 
+
+%\bibitem{ADMM} Stephen Boyd, et al. {\em Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers} 
+
+%\bibitem{Joyce} Joyce Whang, et al. {\em Scalable Data-driven PageRank: Algorithms, System Issues '\&' Lessons Learned}
  
- \bibitem{MPIref} mcs.anl.gov {\em http://www.mcs.anl.gov/research/projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html}
+ %\bibitem{MPIref} mcs.anl.gov {\em http://www.mcs.anl.gov/research/projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html}
  
- \bibitem{FSU} fsu.edu {\em http://people.sc.fsu.edu/~jburkardt/cppsrc/mpi/mpi.html}
+ %\bibitem{FSU} fsu.edu {\em http://people.sc.fsu.edu/~jburkardt/cppsrc/mpi/mpi.html}
 
- \bibitem{MPIPR} Xiaoyi (Eric) Li  {\em Parallel PageRank Computation using MPI}
+% \bibitem{MPIPR} Xiaoyi (Eric) Li  {\em Parallel PageRank Computation using MPI}
 
- \bibitem{YahooPPR} David Gleich, Leonid Zhukov, Pavel Berkhin  {\em Fast Parallel PageRank: Methods and Evaluations}
+% \bibitem{YahooPPR} David Gleich, Leonid Zhukov, Pavel Berkhin  {\em Fast Parallel PageRank: Methods and Evaluations}
 
- \bibitem{IndianaPPR} Shubhada Karavinkoppa and Jayesh Kawli  {\em Page Rank Algorithm Using MPI}
+ %\bibitem{IndianaPPR} Shubhada Karavinkoppa and Jayesh Kawli  {\em Page Rank Algorithm Using MPI}
 
- \bibitem{MixedMPI} Bundit Manaskasemsak, Putchong Uthayopas, Arnon Rungsawang {\em A Mixed MPI-Thread Approach for Parallel Page Ranking Computation}
+ %\bibitem{MixedMPI} Bundit Manaskasemsak, Putchong Uthayopas, Arnon Rungsawang {\em A Mixed MPI-Thread Approach for Parallel Page Ranking Computation}
 
-\end{thebibliography}
+%\end{thebibliography}
 
 \end{document}

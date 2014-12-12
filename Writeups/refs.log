@@ -1,0 +1,22 @@
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdftex 2014.10.6)  12 DEC 2014 15:55
+entering extended mode
+**C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/refs.bib
+(C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/refs.bib
+! Missing $ inserted.
+<inserted text> 
+                $
+<to be read again> 
+                   _
+l.5  issue_
+           date = {April 1985},
+? 
+! Emergency stop.
+<inserted text> 
+                $
+<to be read again> 
+                   _
+l.5  issue_
+           date = {April 1985},
+End of file on the terminal!
+
+!  ==> Fatal error occurred, no output PDF file produced!
