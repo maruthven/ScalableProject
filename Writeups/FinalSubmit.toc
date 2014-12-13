@@ -3,11 +3,11 @@
 \contentsline {section}{\numberline {3}Load Balancing}{3}
 \contentsline {section}{\numberline {4}Algorithms and Implementation}{3}
 \contentsline {subsection}{\numberline {4.1}Topology-driven}{3}
-\contentsline {subsection}{\numberline {4.2}Data-Driven Pagerank}{4}
-\contentsline {subsection}{\numberline {4.3}Linear System Approach}{8}
-\contentsline {subsection}{\numberline {4.4}ADMM}{9}
-\contentsline {section}{\numberline {5}Results}{10}
+\contentsline {subsection}{\numberline {4.2}Data-Driven Pagerank}{3}
+\contentsline {subsection}{\numberline {4.3}Linear System Approach: Ax=b Formulation}{7}
+\contentsline {subsection}{\numberline {4.4}ADMM}{8}
+\contentsline {section}{\numberline {5}Results}{9}
 \contentsline {subsection}{\numberline {5.1}Power Iteration Results}{10}
-\contentsline {subsection}{\numberline {5.2}ADMM Results Compared to other Linear methods}{11}
-\contentsline {section}{\numberline {6}Future Work}{11}
-\contentsline {section}{\numberline {7}Conclusion}{11}
+\contentsline {subsection}{\numberline {5.2}ADMM Results Compared to other Linear methods}{10}
+\contentsline {section}{\numberline {6}Future Work}{12}
+\contentsline {section}{\numberline {7}Conclusion}{12}

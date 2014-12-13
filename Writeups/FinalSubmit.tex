@@ -2,7 +2,7 @@
 %\usepackage[utf8x]{inputenc}
 
 
-\documentclass[letterpaper,12pt,onecolumn]{article}
+\documentclass[letterpaper,11pt,onecolumn]{article}
 \usepackage[margin=1in]{geometry} %one inch margins
 \usepackage{amsmath,graphicx}
 \usepackage{algorithmic}
@@ -175,13 +175,13 @@ The Pull-Push data-driven method in algorithm~\ref{alg:pullpush} selectively upd
 
 The Push data-driven method in algorithm~\ref{alg:push} selectively updates the values of $x_v$ based on if its residual is above a threshold, $\epsilon$. It updates $x_v$ by only using $r_v$. This accesses less memory by bypassing fetching all of the incoming nodes current values $x_w$. The residuals are accounted for in the $\mathbf{r}$ vector and batch updated to transfer residual values between nodes. Notice that each element, $v$, updates its value, $x_v$, and indices of $r$ both in and out of set $c$. This requires the syncing of all copies of $r^{new}$ between nodes by summing. 
 
-Although MPI allowed for a distributed Pagerank algorithm, there were a couple of restrictions on the implementation because of the MPI and openMP framework we chose to use. When syncing values between nodes, MPI requires all nodes to simultaneously request and send the information they require. This means that all of the independent nodes have to update the values in batch. The original implementation in Galois~\ref{Joyce} utilized the asynchronisity of value updates unique to Galois to be able to have threadsafe updates, and shared residual values between threads. This is not a feature in openMP or MPI. In openMP, each thread kept track of its own residuals for the whole set of indices, and reduced after all were calculated within each node, then shared its values to sum up all of the nodes' residual values. These 2 steps of synchronization were not necessary in the Galois implementation. Additionally, the batch update of residuals and the boolean update vector meant that a meaningful worklist was impossible to keep without the vectors from the other nodes. This meant, to selectively compute a new value the Pagerank, each node had to go through each value of the residual or update vectors to check if it met the standards of update. 
+Although MPI allowed for a distributed Pagerank algorithm, there were a couple of restrictions on the implementation because of the MPI and openMP framework we chose to use. When syncing values between nodes, MPI requires all nodes to simultaneously request and send the information they require. This means that all of the independent nodes have to update the values in batch. The original implementation in Galois~\cite{Joyce} utilized the asynchronisity of value updates unique to Galois to be able to have threadsafe updates, and shared residual values between threads. This is not a feature in openMP or MPI. In openMP, each thread kept track of its own residuals for the whole set of indices, and reduced after all were calculated within each node, then shared its values to sum up all of the nodes' residual values. These 2 steps of synchronization were not necessary in the Galois implementation. Additionally, the batch update of residuals and the boolean update vector meant that a meaningful worklist was impossible to keep without the vectors from the other nodes. This meant, to selectively compute a new value the Pagerank, each node had to go through each value of the residual or update vectors to check if it met the standards of update. 
 
 The new vectors of information about each index needed to be passed between nodes. More information to send corresponds with a longer amount of time spend on sending data. In the case of algorithms~\ref{alg:pull} and~\ref{alg:pullpush}, they both send $\mathbf{x_c}$ and an update vector. This does not scale well for big 
 
 NOTE: THIS NEEDS MORE INFORMATION 
 
-\subsection{Linear System Approach}
+\subsection{Linear System Approach: Ax=b Formulation}
 This approach requires that we form the Pagerank problem into a different linear system (Ax=b) where we fundamentally look at methods of iterating or directly solving for an inverse to solve for x which would would provide the list of Pagerank values. Below is a simple derivation taken from \cite{FastParallel}.
 \begin{center}
 \begin{align}
@@ -268,7 +268,7 @@ The resulting algorithm, using the augmented lagrangian presented in the ADMM me
 \end{algorithm}
 \end{center}
 
-Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$ and for our implementation, we chose the $L^{1}$ regularization term (also known as lasso) and used a gradient solver with Eigen to solve the minimization for x. Using the lasso regulariztion the z update becomes soft-thresholding update. Considering the Lasso method, the updated algorithm is below.
+Where $u_{i}^{k} = \frac{1}{\rho} y_{i}^{k}$ and for our implementation, we chose the $L^{1}$ regularization term (also known as lasso) with a gradient descent sovler and we also attempted a direct solve with Eigen for the minimization for x, although the results were poor. Using the lasso regulariztion the z update becomes soft-thresholding update. Considering the Lasso method, the updated algorithm is below.
 
 \begin{center}
 \begin{algorithm}
@@ -289,6 +289,32 @@ Where S is defined componend-wise in the following way:
 \end{center}
 
 
+The first approach we took to solving the minimization problem on each separate process was to use the direct inversion with Eigen. Below is the resulting equation required to be solved for direct inversion.
+\begin{center}
+  \begin{equation}
+	x^{k+1} := (A_{i}^{T}A_{i} + \rho I)^{-1}(A_{i}^{T}b_{i} + \rho(z^{k} - u_{i}^{k}))
+	\label{}
+  \end{equation}
+\end{center}
+The above equation makes it clear that using this direct solve method would require the formation of an mxm matrix (the same size as the original matrix) which would then be dense. This renders the direct solve method nearly usesless and indeed when attempting this method, the algorithm (on a small matrix, m=1770961) took 2 hours to complete 1 iteration.
+\newline
+\linebreak
+Another method we investigated is the gradient descent algorithm. Below is a short description of gradient descent for those unfamiliar with the method.
+
+\begin{center}
+  \begin{algorithm}
+	\caption{Gradient Descent Algorithm}
+	\begin{algorithmic}[1]
+	  \STATE Set Threshold
+	  \STATE Initialize $x_{n+1}, x_{n}$ s.t. $\|x_{n+1} - x_{n}\| > threshold$
+	  \WHILE{$\|x_{n+i1} - x_{n}\| > threshold$}
+	  \STATE $x_{n+1} = x_{n} - \alpha \nabla F(x_{n})$
+	  \STATE select $\alpha$  s.t. $\alpha$ = min $\nabla F(x_{n+1})$
+	  \ENDWHILE
+	\end{algorithmic}
+  \end{algorithm}
+\end{center}
+Step 5 above is done with line search looking at a set of discrete values between 0.001 and 10.
 
 \section{Results}
 The different methods had varying quantitative and qualitative results. These included the time to complete, speedup, scalability, and ease of coding. 
@@ -298,14 +324,50 @@ This is where graphs would go
 
 
 \subsection{ADMM Results Compared to other Linear methods}
+The results below are an attempt to compare other parallel linear solvers for Ax=b  on different data sets and machines with our results for ADMM. This is not the primary focuse of the ADMM results, but it may offer some general intuition about the ADMM method compared to linear solvers not addressed in this paper.
+The residual value, after which the process stops, for all data below was set to $10^{-7}$ and the data set used for the ADMM method was the livejournal dataset.
+\begin{center}
+  \begin{tabular}{c|c|c|c|c}
+	\hline
+	Method & Nodes & Iterations & Total Time (s) & Processes \\
+	\hline\hline
+	Jacobi & 300M & 71 & 9.94 & 60\\
+	PR & 14M & 84  & 5.04 & 20 \\ 
+	ADMM & 83.6M & 345 & 38.8  & 16 \\
+	ADMM & 83.6M & 643 & 28.15 & 64 \\
+  \end{tabular}
+\end{center}
 
+Again, although it is difficult to compare results on different data sets from different machines, the above results would indicate that the ADMM method (with gradient descent minimization) does not perform well compared to other parallel methods. This poor performance is likely due to a few things: As we increase the number of processes to solve the problem, the amount of information that has to be passed through MPI becomes a bigger burden and this ADMM code has not been optimized for message passing. Also, the minimization solver could likely be improved by changing the solver to something that is more appropriate given the underdetermined systems that are solved. Our ADMM solver, unlike our data-drive approach, does not take into consideration any information about the structure or values of our data. It would be possible to optimize according to some update criteria; this will be exapnded upon in the future work section of this paper. Also, the software used in the competing methods (PETSC) has been significantly optimized and therefore we generally should expect our naive method to peform worse, regardless of the specific solver.
+\newline
+\linebreak
+In addition to comparing the ADMM method to other parallel (Ax=b) solvers, the data set below will serve as a way to compare ADMM to the power iteration methods (push, pull, push-pull, topological). The DataSet column below will indicate the livejournal(LJ) or friendster(FR). We chose to not run the ADMM method on any larger data sets as the results for this method tended to be poor and the primary purpose of this paper is to focus on the results of distributing the data-driven methods.
+
+\begin{center}
+  \begin{tabular}{c|c|c|c}
+	\hline
+	DataSet & Iterations & Total Time (s) & Processes \\
+	\hline\hline
+	LJ & 345 & 38.8  & 16 \\
+	LJ & 643 & 28.15 & 64 \\
+	LJ & 1043 & 36.2 & 128 \\
+	FR &  &  & 16 \\
+	FR &  &  & 64 \\
+	FR &  &  & 128 \\
+  \end{tabular}
+\end{center}
+The results above would indicate that there is the expected speed up when we increase the number of processes, but it is without question not a linear speed up. Again, we suspect this is due to the increase in message overhead. It is also indicated that the time per iteration increases which is exactly what we expected. Each iteration should take less time as the amount of data on each process will decrease with an increase in processes. Additionally, the number of iterations increases which we also expected since each individual process has an underdetermined process and will quickly solve for some minimum value but may not be close to the final global solution (dues to many local minimums) and therefore require much guidance (updates from the global variable z) to converge. Finally, we notice that with 128 processes, the total solve time begins to increase. We suspect this again due to inefficient message passing consuming a significant amount of time.
+\newline
+\pagebreak
+Although ADMM appeared to have poor results relative to other tested methods, it should be noted that the coding for ADMM was relatively simple and easy to understand. Aside from getting familiar with MPI and the minimzation solver, there was nothing difficult about creating the code. A valuable metric for those looking for a quick (not so efficient) method for solving problems in this category.
 
 \section{Future Work}
-
+Related to ADMM, there are many possible areas to focus for future research. Optimization can be done around selecting a better method for minimzation on each process. Not only around the general method, but modifying that method to take a more data-driven approach since we have seen this can have a significant impact on results. Our approach uses the lasso method ($L^{1}$) regularization with the intent to creat a sparse solution therefore reducing message overhead if using a sparse matrix/vector representation, which proved to be less efficient than standard solvers. 
+\newline
+Aside from updating the minimization solver, the ADMM method could be improved by optimizing the message passing process. The curent code does not take into consideration sparsity of data nor the change in values it updates; meaning if a values was being updated to a values that was not significanlty different than its original value, can there be significant speed up with deciding not to update those values. This could be tremendously valuable when updating the global value z and broadcasting that update back to all processes.
 
 \section{Conclusion}
 
-This bib actually needs to be in a separate bib file
 \vfill\pagebreak
 \bibliographystyle{IEEEbib}
 \bibliography{refs}
