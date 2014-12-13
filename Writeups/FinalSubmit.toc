@@ -4,7 +4,7 @@
 \contentsline {section}{\numberline {4}Algorithms and Implementation}{3}
 \contentsline {subsection}{\numberline {4.1}Topology-driven}{3}
 \contentsline {subsection}{\numberline {4.2}Data-Driven Pagerank}{3}
-\contentsline {subsection}{\numberline {4.3}Linear System Approach: Ax=b Formulation}{7}
+\contentsline {subsection}{\numberline {4.3}Linear System Approach}{7}
 \contentsline {subsection}{\numberline {4.4}ADMM}{8}
 \contentsline {section}{\numberline {5}Datasets}{9}
 \contentsline {section}{\numberline {6}Results}{10}

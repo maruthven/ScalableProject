@@ -17,9 +17,9 @@
 \tableofcontents
 \pagebreak
 \section{Introduction}
-The purpose of this project is to investigate distributed PageRank by applying Pagerank methods currently in use in the multi-thread case and implement it in the distributed setting. It is to determine if these methods can be scaled to multi-machine systems. We also take a method that has already proven to be effective in the distributed setting and apply it to the Pagerank problem Alternating Direction Method of Multipliers (ADMM) \cite{ADMM}). Immediately below is a more detailed description of each approach. The primary metrics for performace will be: speedup, scalability, and ease of implementation, all of which will be explained in the results section. The last metric is included to suggest that ease of coding and understanding of a method has an impact on the adoption rate in industry and therefore should be included in this investigation.
+The purpose of this project is to investigate distributed PageRank by applying Pagerank methods currently in use in the multi-thread case and implement it in the distributed setting. It is to determine if these methods can be scaled to multi-machine systems. We also take a method that has already proven to be effective in the distributed setting and apply it to the Pagerank problem Alternating Direction Method of Multipliers (ADMM) \cite{ADMM}). Immediately below is a more detailed description of each approach. The primary metrics for performance will be: speedup, scalability, and ease of implementation, all of which will be explained in the results section. The last metric is included to suggest that ease of coding and understanding of a method has an impact on the adoption rate in industry and therefore should be included in this investigation.
 
-We chose to investigate ADMM \cite{ADMM} because it would have higher performance for ease of coding and understanding. We applied ADMM to the linear form of the Pagerank problem (Ax=b), but it is more difficult to apply a data-driven approach to the separated minimization problems, so to investigate data-driven approaches outlined in~\cite{Joyce}, we implemented data-driven power iteration with MPI and openMP. Typical power iteration will be refered to as Topology driven. The data-driven methods were Pull, Pull-Push, and Push based. The details of each permutation of the data-driven methods will be discussed in following sections. Because each method is implemented on distributed nodes on a big dataset, each method took advantage of the separate memories, and divided the connection matrices between nodes. There, we implemented a static load balancing regime based on amount of nonzeros in the assigned rows, which proved to be more efficient than load balancing on the number of x elements to calculate. Load balancing will be explained more in the following sections. 
+We chose to investigate ADMM \cite{ADMM} because it would have higher performance for ease of coding and understanding. We applied ADMM to the linear form of the Pagerank problem (Ax=b), but it is more difficult to apply a data-driven approach to the separated minimization problems, so to investigate data-driven approaches outlined in~\cite{Joyce}, we implemented data-driven power iteration with MPI and openMP. Typical power iteration will be referred to as Topology driven. The data-driven methods were Pull, Pull-Push, and Push based. The details of each permutation of the data-driven methods will be discussed in following sections. Because each method is implemented on distributed nodes on a big dataset, each method took advantage of the separate memories, and divided the connection matrices between nodes. There, we implemented a static load balancing regime based on amount of nonzeros in the assigned rows, which proved to be more efficient than load balancing on the number of x elements to calculate. Load balancing will be explained more in the following sections. 
 
 The methods' performance will be compared on total time, speed up, and scalability over varying amount of nodes (MPI), and cores per node (openMP). And finally, we will go over the limitations of the methods in MPI and openMP, and future work. 
 
@@ -31,7 +31,7 @@ Iterative solvers for the formulation Ax=b using well known methods including bu
  
 Previous implementations of Pagerank with MPI~\cite{MPIPR} showed that it is expected for compute time to decrease as the number of MPI processes increase to a certain point. As seen in the figure presented in the paper, with a 1M node graph, after about 30 cores, the solve time starting to trend slightly upward. We assume this increase in solve time is primarily due to the increase in message passing overhead. This would suggest that we should see similar results and also that there may be an optimal core number depending on the size of the data. 
 
-We have worked extremely closely with Joyce Whang as many of our algorithms were taken directly from her research paper and other members of her research group~\cite{Joyce}. In her submitted paper, the algorithms proposed are implemented on a Galois multithread system. Our data-driven implementations are taken directly from her paper and implemented with the MPI and openMP frameworks. This extraction to the distrubuted setting is to confirm or deny the idea that her algorithms could also be effective across nodes.
+We have worked extremely closely with Joyce Whang as many of our algorithms were taken directly from her research paper and other members of her research group~\cite{Joyce}. In her submitted paper, the algorithms proposed are implemented on a Galois multithread system. Our data-driven implementations are taken directly from her paper and implemented with the MPI and openMP frameworks. This extraction to the distributed setting is to confirm or deny the idea that her algorithms could also be effective across nodes.
 
 \section{Load Balancing}
 Before this paper details the different algorithms we implemented, it will talk about load balancing. Load balancing on distributed systems could be scheduled in task or job manner, as discussed in~\cite{distributed}, where jobs were a collection of tasks. Because MPI is best suited for batch passing of messages, our project used a job based approach. The two approaches were to balance jobs by number of tasks (indices to compute Pagerank), or balance by total average work for each node (summation of nonzeros of each incoming node for the assigned indices). First we implemented our methods where each node had the same amount of tasks to compute. Then, we implemented balancing by total work, and compared the differences. The topological and data-driven Pagerank algorithms consistantly sped up where the total work balancing was about two times faster than the balanced tasked method. For these reasons, the results reflect algorithms which used the work balancing method. 
@@ -41,7 +41,7 @@ Before this paper details the different algorithms we implemented, it will talk 
 This section discusses the implementations of different methods for computing pagerank. This includes topological, data-driven, and ADMM Pagerank. 
 
 \subsection{Topology-driven}
-This is the classic implmentation for calculating Pagerank, seen in algorithm~\ref{alg:top} . It is straight forward, but recalculates all X values every iteration. This could be redundant on a large percentage of the X indices, and therefore, it could waste computational power. 
+This is the classic implementation for calculating Pagerank, seen in algorithm~\ref{alg:top} . It is straight forward, but recalculates all X values every iteration. This could be redundant on a large percentage of the X indices, and therefore, it could waste computational power. 
 
 \begin{algorithm}
 \caption{Topology-driven Pagerank}
@@ -177,9 +177,8 @@ Although MPI allowed for a distributed Pagerank algorithm, there were a couple o
 
 The new vectors of information about each index needed to be passed between nodes. More information to send corresponds with a longer amount of time spend on sending data. In the case of algorithms~\ref{alg:pull} and~\ref{alg:pullpush}, they both send $\mathbf{x_c}$ and an update vector. This does not scale well for big 
 
-NOTE: THIS NEEDS MORE INFORMATION 
 
-\subsection{Linear System Approach: Ax=b Formulation}
+\subsection{Linear System Approach}
 This approach requires that we form the Pagerank problem into a different linear system (Ax=b) where we fundamentally look at methods of iterating or directly solving for an inverse to solve for x which would would provide the list of Pagerank values. Below is a simple derivation taken from \cite{FastParallel}.
 \begin{center}
 \begin{align}
@@ -244,7 +243,7 @@ Our origninal minimization of Ax-b with a certain norm and regulariztion on x no
 	&subject \: \: \: to \: \: \: x_{i} - z = 0 \: \: \: \forall i
 \end{align}
 \end{center}
-Where $x_{i}$ are local variables that we force to match the global solution z at each step and N is the number of processes used to solve the problem. This method also includes an 'augmented lagragian' term. This term is used to bring robustness to the dual ascent problem and result in convergence without criteria like strict convexity or finiteness of the function. This is discussed in much greater detail in \cite{ADMM}. Below is the augemented lagrangian which is used to derive the resulting algorithm.
+Where $x_{i}$ are local variables that we force to match the global solution z at each step and N is the number of processes used to solve the problem. This method also includes an 'augmented lagragian' term. This term is used to bring robustness to the dual ascent problem and result in convergence without criteria like strict convexity or finiteness of the function. This is discussed in much greater detail in \cite{ADMM}. Below is the augmented lagrangian which is used to derive the resulting algorithm.
 \newline
 \begin{center}
   \begin{align}
@@ -294,7 +293,7 @@ The first approach we took to solving the minimization problem on each separate 
 	\label{}
   \end{equation}
 \end{center}
-The above equation makes it clear that using this direct solve method would require the formation of an mxm matrix (the same size as the original matrix) which would then be dense. This renders the direct solve method nearly usesless and indeed when attempting this method, the algorithm (on a small matrix, m=1770961) took 2 hours to complete 1 iteration.
+The above equation makes it clear that using this direct solve method would require the formation of an mxm matrix (the same size as the original matrix) which would then be dense. This renders the direct solve method nearly useless and indeed when attempting this method, the algorithm (on a small matrix, m=1770961) took 2 hours to complete 1 iteration.
 \newline
 \linebreak
 Another method we investigated is the gradient descent algorithm. Below is a short description of gradient descent for those unfamiliar with the method.
@@ -313,6 +312,7 @@ Another method we investigated is the gradient descent algorithm. Below is a sho
   \end{algorithm}
 \end{center}
 Step 5 above is done with line search looking at a set of discrete values between 0.001 and 10.
+
 
 \section{Datasets}
 In order to compare performances of the algorithms in different conditions, five datasets were used. They vary in size, sparsity, and quality of symmetry. These qualities are displayed in table~\ref{table:data}. All of these qualities influence the performance of the algorithms. The PLD, Twitter RV, and SD1 datasets were the same ones used in~\cite{Joyce}. They are good examples of fairly sizeable datasets that 
@@ -554,13 +554,15 @@ The data-driven algorithms update values that are possibly not thread safe. In t
 
 One big overhead was the vector of values that were checked every iteration. To lower this, and to lower the amount of information sent, we suggest another improvement would be to move to a worklist implementation of the data-driven methods. We did not implement a work list because the residuals were spread between each core, and therefore we could not implement a low overhead way of combining then creating a worklist. 
 
-Eventhough our method load balanced by nonzeros in each node, the nodes which continued to require recomputation were not necessarily equally distributed throughout the nodes. This meant that some nodes might not have had many values updated, but others would compute many. Because each node synchronized at the end of an iteration, the fastest iteration was as slow as the slowest node. To address that issue, there could be more dynamic scheduling of indices. But, as to be able to run on the TACC computers for the bigger 
+Eventhough our method load balanced by nonzeros in each node, the nodes which continued to require recomputation were not necessarily equally distributed throughout the nodes. This meant that some nodes might not have had many values updated, but others would compute many. Because each node synchronized at the end of an iteration, the fastest iteration was as slow as the slowest node. To address that issue, there could be more dynamic scheduling of indices. But, as to be able to run on the TACC computers for the bigger datasets., the connection graph was distributed across nodes, and therefore, reassigning indices was not a viable option for the system.
 
 Related to ADMM, there are many possible areas to focus for future research. Optimization can be done around selecting a better method for minimzation on each process. Not only around the general method, but modifying that method to take a more data-driven approach since we have seen this can have a significant impact on results. Our approach uses the lasso method ($L^{1}$) regularization with the intent to creat a sparse solution therefore reducing message overhead if using a sparse matrix and vector representation, which proved to be less efficient than standard solvers. 
 
 Aside from updating the minimization solver, the ADMM method could be improved by optimizing the message passing process. The curent code does not take into consideration sparsity of data nor the change in values it updates; meaning if a values was being updated to a values that was not significanlty different than its original value, can there be significant speed up with deciding not to update those values. This could be tremendously valuable when updating the global value z and broadcasting that update back to all processes.
 
 \section{Conclusion}
+
+In this paper, we overviewed the distributed Pagerank implementations of Topological, data-driven (pull, pull-push, and push), and ADMM. It compared the results over a varying amount of nodes and threads. In the end, the best implementations were push data-driven and topological Pagerank. Each of their performance was better than the other in some cases. Even though the data-driven methods have been shown to be consistantly faster than topological implementations~\cite{Joyce}, artifacts of openMP and MPI disallowed the elements of their implementation that created the speedup. These elements, outlined in Future Work, could be implemented given enough time. Overall, the only method that outperformed the baseline semiconsistantly was the Push data-driven Pagerank method. 
 
 \vfill\pagebreak
 \bibliographystyle{IEEEbib}
