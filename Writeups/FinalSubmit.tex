@@ -5,6 +5,7 @@
 \documentclass[letterpaper,11pt,onecolumn]{article}
 \usepackage[margin=1in]{geometry} %one inch margins
 \usepackage{amsmath,graphicx}
+\usepackage{subcaption}
 \usepackage{algorithmic}
 \usepackage{algorithm}
 
@@ -316,11 +317,169 @@ Another method we investigated is the gradient descent algorithm. Below is a sho
 \end{center}
 Step 5 above is done with line search looking at a set of discrete values between 0.001 and 10.
 
+\section{Datasets}
+In order to compare performances of the algorithms in different conditions, five datasets were used. They vary in size, sparsity, and quality of symmetry. These qualities are displayed in table~\ref{table:data}. All of these qualities influence the performance of the algorithms. The PLD, Twitter RV, and SD1 datasets were the same ones used in~\cite{Joyce}. They are good examples of fairly sizeable datasets that 
+
+\begin{center}
+  \begin{tabular}{ c | c  | c | c }
+    \hline
+    Name & Size & Indices & Symmetric \\ \hline \hline
+    Livejournal & 1.1 GB & 1,770,961 & Yes \\ \hline
+    Friendster & 7 GB & 15,853,098 & Yes \\ \hline
+    PLD & 10.4 GB & 39,497,202 & No \\ \hline
+    Twitter RV & 23.5 GB & 41,652,230 & No \\ \hline
+    SD1 & 32.7 GB & 82,924,685 & No \\
+    \hline
+  \end{tabular}
+  \label{table:data}
+\end{center}
+
+
+
 \section{Results}
 The different methods had varying quantitative and qualitative results. These included the time to complete, speedup, scalability, and ease of coding. 
 
 \subsection{Power Iteration Results}
-This is where graphs would go 
+
+The Topology and Data-driven Pagerank implementations were written in C++ and used MPI to run on distributed nodes, and openMP to run multiple threads within each node. Each algorithm’s performance was timed on each of the datasets in all of the combinations of 1, 4, 8, 16, 32 compute nodes and 1, 4, 8, and 16 threads. For additional understanding of how performance changed over number of nodes and threads, scalability and speedup are visualized in figures~\ref{fig:time}. These measures are the same measures used in~\cite{Joyce}. 
+
+\begin{center}
+  \begin{equation}
+	Scalability = \frac{run-time \ of \ method \ m \ with \ a \ single \ thread}{run-time \ of \ method \ m \ with \ t \ threads}
+	\label{math:scale}
+  \end{equation}
+\end{center}
+
+\begin{center}
+  \begin{equation}
+	Speedup = \frac{run-time \ of \ the \ fastest \ single-thread \ method}{run-time \ of \ method \ m \ with \ t \ threads}
+	\label{math:speed}
+  \end{equation}
+\end{center}
+
+Scalability,~\ref{math:scale}, is a metric to show the change in runtime from one method’s baseline, whereas speedup,~\ref{math:speed}, is to show the change in runtime from the best case scenario method at baseline configuration. Both frameworks have different artifacts that enable or hinder speedup and scalability as the number of threads increase. So, speedup and scalability are evaluated for MPI and openMP separately. 
+
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{LiveJournalTime}
+  \caption{Live Journal}
+  \label{fig:lgtime}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{FriendsterTime}
+  \caption{Friendster}
+  \label{fig:ftime}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{PLDTime}
+  \caption{PLD}
+  \label{fig:ftime}
+\end{subfigure}
+\caption{Convergence times of different PageRank implementations on datasets from table~\ref{table:data}}
+\label{fig:time}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{LiveJournalOMPScalability}
+  \caption{Live Journal}
+  \label{fig:lgtime}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{FriendsterOMPScalabilty}
+  \caption{Friendster}
+  \label{fig:ftime}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{PLDOMPScalability}
+  \caption{PLD}
+  \label{fig:ftime}
+\end{subfigure}
+\caption{Scalability over openMP threads of different PageRank implementations on datasets from table~\ref{table:data}}
+\label{fig:scOMP}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{LiveJournalMPIScalability}
+  \caption{Live Journal}
+  \label{fig:lgtime}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{FriendsterMPIScalability}
+  \caption{Friendster}
+  \label{fig:ftime}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{PLDMPIScalability}
+  \caption{PLD}
+  \label{fig:ftime}
+\end{subfigure}
+\caption{Scalability over MPI nodes of different PageRank implementations on datasets from table~\ref{table:data}}
+\label{fig:scMPI}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{LiveJournalOMPSpeedup}
+  \caption{Live Journal}
+  \label{fig:lgtime}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{FriendsterMPISpeedup}
+  \caption{Friendster}
+  \label{fig:ftime}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{PLDMPISpeedup}
+  \caption{PLD}
+  \label{fig:ftime}
+\end{subfigure}
+\caption{Speedup over openMP threads of different PageRank implementations on datasets from table~\ref{table:data}}
+\label{fig:spOMP}
+\end{figure}
+
+\begin{figure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{LiveJournalMPISpeedup}
+  \caption{Live Journal}
+  \label{fig:lgtime}
+\end{subfigure}%
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{FriendsterMPISpeedup}
+  \caption{Friendster}
+  \label{fig:ftime}
+\end{subfigure}
+\begin{subfigure}{.33\textwidth}
+  \centering
+  \includegraphics[width=.99\linewidth]{PLDMPISpeedup}
+  \caption{PLD}
+  \label{fig:ftime}
+\end{subfigure}
+\caption{Speedup over MPI nodes of different PageRank implementations on datasets from table~\ref{table:data}}
+\label{fig:spMPI}
+\end{figure}
+
+The general trends in performance as seen in~\ref{fig:time}, are that the Pull and Pull-push implementations are generally the slowest, and the Push and Topological implementations are inconsistently \#1 and \#2 in speed. This performance can be due to a number of things such as:
+
+\
+message vs nodes trade off, parallelizability of each algorithm, and computational overhead for each algorithm. 
+
+
 
 
 \subsection{ADMM Results Compared to other Linear methods}
