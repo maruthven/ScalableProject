@@ -3,10 +3,9 @@ White space in argument---line 29 of file FinalSubmit.aux
  : \citation{Power
  :                 Law Graphs}
 I'm skipping whatever remains of this command
-I couldn't open style file IEEEbib.bst
----line 89 of file FinalSubmit.aux
- : \bibstyle{IEEEbib
- :                  }
-I'm skipping whatever remains of this command
-I found no style file---while reading file FinalSubmit.aux
-(There were 3 error messages)
+The style file: IEEEbib.bst
+Database file #1: refs.bib
+Name 1 in "Joyce Jiyoung Whang, Andrew Lenharth, and Inderjit S. Dhillon" has a comma at the end for entry Joyce
+while executing---line 1012 of file IEEEbib.bst
+Warning--empty institution in FastParallel
+(There were 2 error messages)

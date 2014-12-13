@@ -1,13 +1,10 @@
-%\documentclass[a4paper,10pt]{article}
-%\usepackage[utf8x]{inputenc}
-
-
 \documentclass[letterpaper,11pt,onecolumn]{article}
 \usepackage[margin=1in]{geometry} %one inch margins
 \usepackage{amsmath,graphicx}
-\usepackage{subcaption}
 \usepackage{algorithmic}
 \usepackage{algorithm}
+\usepackage{caption}
+\usepackage{subcaption}
 
 
 \geometry{verbose,margin=1in}
@@ -341,7 +338,23 @@ The different methods had varying quantitative and qualitative results. These in
 
 \subsection{Power Iteration Results}
 
-The Topology and Data-driven Pagerank implementations were written in C++ and used MPI to run on distributed nodes, and openMP to run multiple threads within each node. Each algorithm’s performance was timed on each of the datasets in all of the combinations of 1, 4, 8, 16, 32 compute nodes and 1, 4, 8, and 16 threads. For additional understanding of how performance changed over number of nodes and threads, scalability and speedup are visualized in figures~\ref{fig:time}. These measures are the same measures used in~\cite{Joyce}. 
+The Topology and Data-driven Pagerank implementations were written in C++ and used MPI to run on distributed nodes, and openMP to run multiple threads within each node. Each algorithm’s performance was timed on each of the datasets in all of the combinations of 1, 4, 8, 16, 32 compute nodes and 1, 4, 8, and 16 threads. That means that each algorithm for each dataset ranges from 1 total thread to 512 threads. This large scale parallelizable capacity is the utility for distributed systems. Ideally, at least one of our proposed implementations would continue to decrease it's run time as more nodes and threads are added.
+
+Coding the different methods had many factors to consider to get the best run time from each of the methods. The code had to consider:
+
+\begin{itemize}
+  \item Datastructures to use for memory speed access and MPI sendability
+  \item Message passing schemes to minimize message overhead time
+  \item Thread safety
+  \item Load balancing
+  \item Minimizing computation
+  \item Accessing temporal and spatial location of memory accesses
+  \item Physical limitations of the openMP and MPI frameworks
+\end{itemize}
+
+Because of that, we belive that there are a lot of ways to minimize the computation time of the proposed methods. The solutions presented could be at a local minimum and more time spent looking at the specific implementation could unveil a implementation with lower run time. With that being said, our implementation has already undergone extensive amounts of optimization, and we feel that all of the implementations are at a level we can compare them at. 
+
+For additional understanding of how performance changed over number of nodes and threads, scalability and speedup are visualized in figures~\ref{fig:time}. These measures are the same measures used in~\cite{Joyce}. 
 
 \begin{center}
   \begin{equation}
@@ -357,7 +370,7 @@ The Topology and Data-driven Pagerank implementations were written in C++ and us
   \end{equation}
 \end{center}
 
-Scalability,~\ref{math:scale}, is a metric to show the change in runtime from one method’s baseline, whereas speedup,~\ref{math:speed}, is to show the change in runtime from the best case scenario method at baseline configuration. Both frameworks have different artifacts that enable or hinder speedup and scalability as the number of threads increase. So, speedup and scalability are evaluated for MPI and openMP separately. 
+Scalability, equation~\ref{math:scale}, is a metric to show the change in runtime from one method’s baseline, whereas speedup, equation~\ref{math:speed}, is to show the change in runtime from the best case scenario method at baseline configuration. Both frameworks have different artifacts that enable or hinder speedup and scalability as the number of threads increase. So, speedup and scalability are evaluated for MPI and openMP separately. 
 
 \begin{figure}
 \begin{subfigure}{.33\textwidth}
@@ -474,13 +487,29 @@ Scalability,~\ref{math:scale}, is a metric to show the change in runtime from on
 \label{fig:spMPI}
 \end{figure}
 
-The general trends in performance as seen in~\ref{fig:time}, are that the Pull and Pull-push implementations are generally the slowest, and the Push and Topological implementations are inconsistently \#1 and \#2 in speed. This performance can be due to a number of things such as:
+Please note on figures~\ref{fig:scOMP} and~\ref{fig:spOMP}, the metric is reset at every thread = 1. This creates a misleading dip in the curve from 16 to 1 threads. Additionally, figures for the datasets not shown here are in section BLANK.
 
-\
-message vs nodes trade off, parallelizability of each algorithm, and computational overhead for each algorithm. 
+The general trends in performance as seen in~\ref{fig:time}, are that the Pull and Pull-push implementations are generally the slowest, and the Push and Topological implementations change as \#1 and \#2 in speed over nodes x threads. The Push algorithm outperforms the Topological method generally when the system is in a low thread and core count configuration. This performance can be due to a number of things such as:
 
+\begin{itemize}
+  \item Message overhead vs growing nodes
+  \item Parallelizability
+  \item Computational overhead in addition to the baseline power iteration approach
+\end{itemize}
 
+The details of which will be addressed in a later part of this paper. This underperformance of the data-driven methods are not ideal as our project aims to propose methods that are faster than the topological Pagerank method. The implementation in a distributed system creates the goal that the methods are scalable in order to take advantage of the system. 
 
+On the other hand, the figures~\ref{fig:scOMP}-\ref{fig:spMPI} show that not all cores are created equal. This refers to the time it takes for a Pagerank to run is not equal, even when there are the same number of cores but implemented in a different configureation. This is to say, X nodes by Y threads does not have the same run time as Y nodes by X threads. The figures above exemplify that the implementations have lower run times when the number of MPI nodes grows. This is in contrast to the loss in speedup as additional threads are added in openMP. In many cases, the runtimes actually get slower on the 16 thread setting than the 1 thread setting. This could be attributed to the setup of the system. TACC, the computer system the computations were run on, composes 1 node as 2 Intel Xeon processors with 8 threads each. In the 16 thread case, the 16 cores are sharing the same pieces of memory across 2 processors. No matter where the data is stored, the processors have to access memory not in their cache, or maybe openMP has a method of automatically load balancing the memory, which would take time to compute what to do and move the memory. 
+
+The algorithm~\ref{alg:top}, topological implementation, iterates over all nodes it connects to in $P_c$, updates all of its $\mathbf{x_c}$, and then sends out an update for each of the nodes working on the problem. This breaks down into 1 iteration of $P_c$, sending a part of $\mathbf{x}$, and receiving a ful $\mathbf{x}$. Although all $x_v$ are updated in each node, the calculation is thread safe inherently. 
+
+The algorithm~\ref{alg:pull}, pull implementation, iterates over all nodes, checks if they should be updated, then for each $x_v$ that passes, it itterates over all $P_v$ to calculate its new value. If $x_v^{new}$ is high enough, it iterates over all of $P_v^T$ to add its connections to the todo list. Then it sends the $\mathbf{x_c}$ and merges its todo list with other nodes. The resulting overhead is one pass over $P_c^T$, and send and reduce a very long vector. This overhead might not be worth the fewer amount of x's computed. 
+
+Similarly, in Pull-push implementation, algorithm~\ref{alg:pullpush}, the overhead is similar, but instead of a todo list, this method keeps a residual value. The update of this residual is not thread safe, as multiple nodes can be connected to and required to update the same node at the same time. To mitigate this, our implementation keeps separate thread copies of the residual thread and combines them after all of the $\mathbf{x_c^{new}}$ are computed. Then, it is sent in the same fasion as Pull. 
+
+In Push implementation, algorithm~\ref{alg:push}, the method only needs one pass over $P_c^T$. This lessens the amount of memory accesses and computation needed for each iteration. This means that the overhead is the lowest of all of the methods. The performance is reflected in figures~\ref{fig:time}-\ref{fig:spMPI}, as this is the only method that had consistantly faster times than the baseline, Topological. 
+
+After considering the physical limitations of the methods, the results make sense. 
 
 \subsection{ADMM Results Compared to other Linear methods}
 The results below are an attempt to compare other parallel linear solvers for Ax=b  on different data sets and machines with our results for ADMM. This is not the primary focuse of the ADMM results, but it may offer some general intuition about the ADMM method compared to linear solvers not addressed in this paper.
@@ -498,8 +527,7 @@ The residual value, after which the process stops, for all data below was set to
 \end{center}
 
 Again, although it is difficult to compare results on different data sets from different machines, the above results would indicate that the ADMM method (with gradient descent minimization) does not perform well compared to other parallel methods. This poor performance is likely due to a few things: As we increase the number of processes to solve the problem, the amount of information that has to be passed through MPI becomes a bigger burden and this ADMM code has not been optimized for message passing. Also, the minimization solver could likely be improved by changing the solver to something that is more appropriate given the underdetermined systems that are solved. Our ADMM solver, unlike our data-drive approach, does not take into consideration any information about the structure or values of our data. It would be possible to optimize according to some update criteria; this will be exapnded upon in the future work section of this paper. Also, the software used in the competing methods (PETSC) has been significantly optimized and therefore we generally should expect our naive method to peform worse, regardless of the specific solver.
-\newline
-\linebreak
+
 In addition to comparing the ADMM method to other parallel (Ax=b) solvers, the data set below will serve as a way to compare ADMM to the power iteration methods (push, pull, push-pull, topological). The DataSet column below will indicate the livejournal(LJ) or friendster(FR). We chose to not run the ADMM method on any larger data sets as the results for this method tended to be poor and the primary purpose of this paper is to focus on the results of distributing the data-driven methods.
 
 \begin{center}
@@ -516,13 +544,20 @@ In addition to comparing the ADMM method to other parallel (Ax=b) solvers, the d
   \end{tabular}
 \end{center}
 The results above would indicate that there is the expected speed up when we increase the number of processes, but it is without question not a linear speed up. Again, we suspect this is due to the increase in message overhead. It is also indicated that the time per iteration increases which is exactly what we expected. Each iteration should take less time as the amount of data on each process will decrease with an increase in processes. Additionally, the number of iterations increases which we also expected since each individual process has an underdetermined process and will quickly solve for some minimum value but may not be close to the final global solution (dues to many local minimums) and therefore require much guidance (updates from the global variable z) to converge. Finally, we notice that with 128 processes, the total solve time begins to increase. We suspect this again due to inefficient message passing consuming a significant amount of time.
-\newline
-\pagebreak
+
+
 Although ADMM appeared to have poor results relative to other tested methods, it should be noted that the coding for ADMM was relatively simple and easy to understand. Aside from getting familiar with MPI and the minimzation solver, there was nothing difficult about creating the code. A valuable metric for those looking for a quick (not so efficient) method for solving problems in this category.
 
 \section{Future Work}
-Related to ADMM, there are many possible areas to focus for future research. Optimization can be done around selecting a better method for minimzation on each process. Not only around the general method, but modifying that method to take a more data-driven approach since we have seen this can have a significant impact on results. Our approach uses the lasso method ($L^{1}$) regularization with the intent to creat a sparse solution therefore reducing message overhead if using a sparse matrix/vector representation, which proved to be less efficient than standard solvers. 
-\newline
+
+The data-driven algorithms update values that are possibly not thread safe. In the case of the residuals, updating that information created a large overhead in the multi-thread case. Using a framework like Galois that accomodates a lightweight atomic update, or updating a buffer to add onto an vector value would get rid of the need to keep separate thread copies of all of the residuals. 
+
+One big overhead was the vector of values that were checked every iteration. To lower this, and to lower the amount of information sent, we suggest another improvement would be to move to a worklist implementation of the data-driven methods. We did not implement a work list because the residuals were spread between each core, and therefore we could not implement a low overhead way of combining then creating a worklist. 
+
+Eventhough our method load balanced by nonzeros in each node, the nodes which continued to require recomputation were not necessarily equally distributed throughout the nodes. This meant that some nodes might not have had many values updated, but others would compute many. Because each node synchronized at the end of an iteration, the fastest iteration was as slow as the slowest node. To address that issue, there could be more dynamic scheduling of indices. But, as to be able to run on the TACC computers for the bigger 
+
+Related to ADMM, there are many possible areas to focus for future research. Optimization can be done around selecting a better method for minimzation on each process. Not only around the general method, but modifying that method to take a more data-driven approach since we have seen this can have a significant impact on results. Our approach uses the lasso method ($L^{1}$) regularization with the intent to creat a sparse solution therefore reducing message overhead if using a sparse matrix and vector representation, which proved to be less efficient than standard solvers. 
+
 Aside from updating the minimization solver, the ADMM method could be improved by optimizing the message passing process. The curent code does not take into consideration sparsity of data nor the change in values it updates; meaning if a values was being updated to a values that was not significanlty different than its original value, can there be significant speed up with deciding not to update those values. This could be tremendously valuable when updating the global value z and broadcasting that update back to all processes.
 
 \section{Conclusion}
@@ -530,30 +565,5 @@ Aside from updating the minimization solver, the ADMM method could be improved b
 \vfill\pagebreak
 \bibliographystyle{IEEEbib}
 \bibliography{refs}
-
-
-%\begin{thebibliography}{1}
-
-%\bibitem{PowerLawGraphs} David Gleich, et al. {\em Scalable Computing for Power Law Graphs: Experience with Parallel PageRank}
-
-%\bibitem{FastParallel} David Gleich, et al. {\em Fast Parallel PageRank: A Linear System Approach} 
-
-%\bibitem{ADMM} Stephen Boyd, et al. {\em Distributed Optimization and Statistical Learning via the Alternating Direction Method of Multipliers} 
-
-%\bibitem{Joyce} Joyce Whang, et al. {\em Scalable Data-driven PageRank: Algorithms, System Issues '\&' Lessons Learned}
- 
- %\bibitem{MPIref} mcs.anl.gov {\em http://www.mcs.anl.gov/research/projects/mpi/tutorial/mpiexmpl/src/jacobicmpl/C/main.html}
- 
- %\bibitem{FSU} fsu.edu {\em http://people.sc.fsu.edu/~jburkardt/cppsrc/mpi/mpi.html}
-
-% \bibitem{MPIPR} Xiaoyi (Eric) Li  {\em Parallel PageRank Computation using MPI}
-
-% \bibitem{YahooPPR} David Gleich, Leonid Zhukov, Pavel Berkhin  {\em Fast Parallel PageRank: Methods and Evaluations}
-
- %\bibitem{IndianaPPR} Shubhada Karavinkoppa and Jayesh Kawli  {\em Page Rank Algorithm Using MPI}
-
- %\bibitem{MixedMPI} Bundit Manaskasemsak, Putchong Uthayopas, Arnon Rungsawang {\em A Mixed MPI-Thread Approach for Parallel Page Ranking Computation}
-
-%\end{thebibliography}
 
 \end{document}
