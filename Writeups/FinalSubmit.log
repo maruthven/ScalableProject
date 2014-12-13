@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  12 DEC 2014 22:45
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  12 DEC 2014 23:23
 entering extended mode
 **C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
 (C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
@@ -148,16 +148,22 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen120
 \Gin@req@width=\dimen121
 )
+(C:\Users\mar3939\AppData\Roaming\MiKTeX\2.9\tex\latex\appendix\appendix.sty
+Package: appendix 2009/09/02 v1.2b extra appendix facilities
+\c@@pps=\count103
+\c@@ppsavesec=\count104
+\c@@ppsaveapp=\count105
+)
 (C:\Users\mar3939\AppData\Roaming\MiKTeX\2.9\tex\latex\algorithms\algorithmic.s
 ty
 Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\ifthen.sty"
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@ALC@unique=\count103
-\c@ALC@line=\count104
-\c@ALC@rem=\count105
-\c@ALC@depth=\count106
+\c@ALC@unique=\count106
+\c@ALC@line=\count107
+\c@ALC@rem=\count108
+\c@ALC@depth=\count109
 \ALC@tlm=\skip46
 \algorithmicindent=\skip47
 )
@@ -166,14 +172,14 @@ Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
 nment
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\float\float.sty"
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count107
+\c@float@type=\count110
 \float@exts=\toks21
 \float@box=\box28
 \@float@everytoks=\toks22
 \@floatcapt=\box29
 )
 \@float@every@algorithm=\toks23
-\c@algorithm=\count108
+\c@algorithm=\count111
 )
 (C:\Users\mar3939\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\caption.sty
 Package: caption 2013/05/02 v3.3-89 Customizing captions (AR)
@@ -189,13 +195,13 @@ Package caption3 Info: TeX engine: e-TeX on input line 57.
 \caption@parindent=\dimen127
 \caption@hangindent=\dimen128
 )
-\c@ContinuedFloat=\count109
+\c@ContinuedFloat=\count112
 Package caption Info: float package is loaded.
 )
 (C:\Users\mar3939\AppData\Roaming\MiKTeX\2.9\tex\latex\caption\subcaption.sty
 Package: subcaption 2013/02/03 v1.1-62 Sub-captions (AR)
-\c@subfigure=\count110
-\c@subtable=\count111
+\c@subfigure=\count113
+\c@subtable=\count114
 )
 (C:\Users\mar3939\Documents\GitHub\ScalableProject\Writeups\FinalSubmit.aux
 
@@ -276,19 +282,79 @@ LaTeX Warning: Label `fig:ftime' multiply defined.
 
 LaTeX Warning: Label `sub@fig:ftime' multiply defined.
 
+
+LaTeX Warning: Label `fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:lgtime' multiply defined.
+
+
+LaTeX Warning: Label `fig:ftime' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:ftime' multiply defined.
+
 )
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -326,16 +392,16 @@ LaTeX Font Info:    ... okay on input line 15.
 
 (C:\Users\mar3939\AppData\Roaming\MiKTeX\2.9\tex\context\base\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count112
+\scratchcounter=\count115
 \scratchdimen=\dimen129
 \scratchbox=\box30
-\nofMPsegments=\count113
-\nofMParguments=\count114
+\nofMPsegments=\count116
+\nofMParguments=\count117
 \everyMPshowfont=\toks24
-\MPscratchCnt=\count115
+\MPscratchCnt=\count118
 \MPscratchDim=\dimen130
-\MPnumerator=\count116
-\makeMPintoPDFobject=\count117
+\MPnumerator=\count119
+\makeMPintoPDFobject=\count120
 \everyMPtoPDFconversion=\toks25
 )
 Package caption Info: Begin \AtBeginDocument code.
@@ -347,141 +413,122 @@ Package caption Info: End \AtBeginDocument code.
 
 {C:/Users/mar3939/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
 [2] [3] [4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 191--195
-
- []
-
 
 LaTeX Warning: Citation `Power Law Graphs' on page 7 undefined on input line 22
-6.
+7.
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 225--232
-
- []
-
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 246--248
-
- []
-
-[8]
-Underfull \hbox (badness 10000) in paragraph at lines 296--300
-
- []
-
-[9]
+[7] [8] [9]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 346.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 351.
 
  ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 346.
- [10]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 351.
+
+[10]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
-
-<LiveJournalTime.png, id=48, 431.36156pt x 253.32141pt>
+ <LiveJournalTime.png, id=48, 431.36156pt x 253.32141pt>
 File: LiveJournalTime.png Graphic file (type png)
 
 <use LiveJournalTime.png>
-Package pdftex.def Info: LiveJournalTime.png used on input line 378.
+Package pdftex.def Info: LiveJournalTime.png used on input line 384.
 (pdftex.def)             Requested size: 153.47064pt x 90.12492pt.
 
 <FriendsterTime.png, id=50, 426.09187pt x 248.05171pt>
 File: FriendsterTime.png Graphic file (type png)
 
 <use FriendsterTime.png>
-Package pdftex.def Info: FriendsterTime.png used on input line 384.
+Package pdftex.def Info: FriendsterTime.png used on input line 390.
 (pdftex.def)             Requested size: 153.47064pt x 89.34396pt.
  <PLDTime.png, id=51, 431.36156pt x 257.46187pt>
 File: PLDTime.png Graphic file (type png)
 
 <use PLDTime.png>
-Package pdftex.def Info: PLDTime.png used on input line 390.
+Package pdftex.def Info: PLDTime.png used on input line 396.
 (pdftex.def)             Requested size: 153.47064pt x 91.59798pt.
 
 <LiveJournalOMPScalability.png, id=52, 423.83344pt x 269.13046pt>
 File: LiveJournalOMPScalability.png Graphic file (type png)
 
 <use LiveJournalOMPScalability.png>
-Package pdftex.def Info: LiveJournalOMPScalability.png used on input line 401.
+Package pdftex.def Info: LiveJournalOMPScalability.png used on input line 407.
 (pdftex.def)             Requested size: 153.47064pt x 97.4495pt.
 
 <FriendsterOMPScalabilty.png, id=53, 426.46828pt x 263.86078pt>
 File: FriendsterOMPScalabilty.png Graphic file (type png)
 
 <use FriendsterOMPScalabilty.png>
-Package pdftex.def Info: FriendsterOMPScalabilty.png used on input line 407.
+Package pdftex.def Info: FriendsterOMPScalabilty.png used on input line 413.
 (pdftex.def)             Requested size: 153.47064pt x 94.95357pt.
 
 <PLDOMPScalability.png, id=54, 416.68172pt x 252.19218pt>
 File: PLDOMPScalability.png Graphic file (type png)
 
 <use PLDOMPScalability.png>
-Package pdftex.def Info: PLDOMPScalability.png used on input line 413.
+Package pdftex.def Info: PLDOMPScalability.png used on input line 419.
 (pdftex.def)             Requested size: 153.47064pt x 92.88634pt.
 
 <LiveJournalMPIScalability.png, id=55, 425.33907pt x 260.84953pt>
 File: LiveJournalMPIScalability.png Graphic file (type png)
 
 <use LiveJournalMPIScalability.png>
-Package pdftex.def Info: LiveJournalMPIScalability.png used on input line 424.
+Package pdftex.def Info: LiveJournalMPIScalability.png used on input line 430.
 (pdftex.def)             Requested size: 153.47064pt x 94.12068pt.
 
 <FriendsterMPIScalability.png, id=56, 424.96266pt x 252.56859pt>
 File: FriendsterMPIScalability.png Graphic file (type png)
 
 <use FriendsterMPIScalability.png>
-Package pdftex.def Info: FriendsterMPIScalability.png used on input line 430.
+Package pdftex.def Info: FriendsterMPIScalability.png used on input line 436.
 (pdftex.def)             Requested size: 153.47064pt x 91.21365pt.
 
 <PLDMPIScalability.png, id=57, 422.70422pt x 256.33266pt>
 File: PLDMPIScalability.png Graphic file (type png)
 
 <use PLDMPIScalability.png>
-Package pdftex.def Info: PLDMPIScalability.png used on input line 436.
+Package pdftex.def Info: PLDMPIScalability.png used on input line 442.
 (pdftex.def)             Requested size: 153.47064pt x 93.06584pt.
 
 <LiveJournalOMPSpeedup.png, id=58, 423.83344pt x 264.23718pt>
 File: LiveJournalOMPSpeedup.png Graphic file (type png)
 
 <use LiveJournalOMPSpeedup.png>
-Package pdftex.def Info: LiveJournalOMPSpeedup.png used on input line 447.
+Package pdftex.def Info: LiveJournalOMPSpeedup.png used on input line 453.
 (pdftex.def)             Requested size: 153.47064pt x 95.67767pt.
 
 <FriendsterMPISpeedup.png, id=59, 424.58624pt x 258.21469pt>
 File: FriendsterMPISpeedup.png Graphic file (type png)
 
 <use FriendsterMPISpeedup.png>
-Package pdftex.def Info: FriendsterMPISpeedup.png used on input line 453.
+Package pdftex.def Info: FriendsterMPISpeedup.png used on input line 459.
 (pdftex.def)             Requested size: 153.47064pt x 93.33545pt.
 
 <PLDMPISpeedup.png, id=60, 429.47954pt x 259.7203pt>
 File: PLDMPISpeedup.png Graphic file (type png)
  <use PLDMPISpeedup.png>
-Package pdftex.def Info: PLDMPISpeedup.png used on input line 459.
+Package pdftex.def Info: PLDMPISpeedup.png used on input line 465.
 (pdftex.def)             Requested size: 153.47064pt x 92.80966pt.
 
 <LiveJournalMPISpeedup.png, id=61, 417.81094pt x 259.3439pt>
 File: LiveJournalMPISpeedup.png Graphic file (type png)
 
 <use LiveJournalMPISpeedup.png>
-Package pdftex.def Info: LiveJournalMPISpeedup.png used on input line 470.
+Package pdftex.def Info: LiveJournalMPISpeedup.png used on input line 476.
 (pdftex.def)             Requested size: 153.47064pt x 95.26321pt.
 File: FriendsterMPISpeedup.png Graphic file (type png)
  <use FriendsterMPISpeedup.png>
-Package pdftex.def Info: FriendsterMPISpeedup.png used on input line 476.
+Package pdftex.def Info: FriendsterMPISpeedup.png used on input line 482.
 (pdftex.def)             Requested size: 153.47064pt x 93.33545pt.
 File: PLDMPISpeedup.png Graphic file (type png)
 
 <use PLDMPISpeedup.png>
-Package pdftex.def Info: PLDMPISpeedup.png used on input line 482.
+Package pdftex.def Info: PLDMPISpeedup.png used on input line 488.
 (pdftex.def)             Requested size: 153.47064pt x 92.80966pt.
  [11 <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/LiveJournalTim
 e.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FriendsterTi
@@ -489,22 +536,112 @@ me.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/PLDTime.png
 > <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/LiveJournalOMPSca
 lability.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/Frien
 dsterOMPScalabilty.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writ
-eups/PLDOMPScalability.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/
-Writeups/LiveJournalMPIScalability.png> <C:/Users/mar3939/Documents/GitHub/Scal
-ableProject/Writeups/FriendsterMPIScalability.png> <C:/Users/mar3939/Documents/
-GitHub/ScalableProject/Writeups/PLDMPIScalability.png>]
-[12 <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/LiveJournalOMPS
-peedup.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/Friends
-terMPISpeedup.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/
-PLDMPISpeedup.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/
-LiveJournalMPISpeedup.png>] [13] [14] [15]
+eups/PLDOMPScalability.png>] [12 <C:/Users/mar3939/Documents/GitHub/ScalablePro
+ject/Writeups/LiveJournalMPIScalability.png> <C:/Users/mar3939/Documents/GitHub
+/ScalableProject/Writeups/FriendsterMPIScalability.png> <C:/Users/mar3939/Docum
+ents/GitHub/ScalableProject/Writeups/PLDMPIScalability.png> <C:/Users/mar3939/D
+ocuments/GitHub/ScalableProject/Writeups/LiveJournalOMPSpeedup.png> <C:/Users/m
+ar3939/Documents/GitHub/ScalableProject/Writeups/FriendsterMPISpeedup.png> <C:/
+Users/mar3939/Documents/GitHub/ScalableProject/Writeups/PLDMPISpeedup.png> <C:/
+Users/mar3939/Documents/GitHub/ScalableProject/Writeups/LiveJournalMPISpeedup.p
+ng>] [13] [14] [15] [16]
+<SD1Time.png, id=94, 431.36156pt x 255.95625pt>
+File: SD1Time.png Graphic file (type png)
+ <use SD1Time.png>
+Package pdftex.def Info: SD1Time.png used on input line 594.
+(pdftex.def)             Requested size: 232.53001pt x 137.97606pt.
+
+<TwitterRVTime.png, id=95, 424.58624pt x 249.18094pt>
+File: TwitterRVTime.png Graphic file (type png)
+ <use TwitterRVTime.png>
+Package pdftex.def Info: TwitterRVTime.png used on input line 600.
+(pdftex.def)             Requested size: 232.53001pt x 136.46819pt.
+
+<SD1OMPScalability.png, id=96, 421.9514pt x 253.32141pt>
+File: SD1OMPScalability.png Graphic file (type png)
+
+<use SD1OMPScalability.png>
+Package pdftex.def Info: SD1OMPScalability.png used on input line 611.
+(pdftex.def)             Requested size: 232.53001pt x 139.60164pt.
+
+<TwitterRVOMPScalability.png, id=97, 419.31656pt x 264.61359pt>
+File: TwitterRVOMPScalability.png Graphic file (type png)
+
+<use TwitterRVOMPScalability.png>
+Package pdftex.def Info: TwitterRVOMPScalability.png used on input line 617.
+(pdftex.def)             Requested size: 232.53001pt x 146.74113pt.
+
+<SD1MPIScalability.png, id=98, 429.10312pt x 265.74281pt>
+File: SD1MPIScalability.png Graphic file (type png)
+
+<use SD1MPIScalability.png>
+Package pdftex.def Info: SD1MPIScalability.png used on input line 628.
+(pdftex.def)             Requested size: 232.53001pt x 144.00583pt.
+
+<TwitterRVMPIScalability.png, id=99, 415.92891pt x 258.21469pt>
+File: TwitterRVMPIScalability.png Graphic file (type png)
+
+<use TwitterRVMPIScalability.png>
+Package pdftex.def Info: TwitterRVMPIScalability.png used on input line 634.
+(pdftex.def)             Requested size: 232.53001pt x 144.35889pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<SD1OMPSpeedup.png, id=100, 416.68172pt x 251.43938pt>
+File: SD1OMPSpeedup.png Graphic file (type png)
+ <use SD1OMPSpeedup.png>
+Package pdftex.def Info: SD1OMPSpeedup.png used on input line 645.
+(pdftex.def)             Requested size: 232.53001pt x 140.31783pt.
+
+<TwitterRVOMPSpeedup.png, id=101, 415.17609pt x 264.99pt>
+File: TwitterRVOMPSpeedup.png Graphic file (type png)
+
+<use TwitterRVOMPSpeedup.png>
+Package pdftex.def Info: TwitterRVOMPSpeedup.png used on input line 651.
+(pdftex.def)             Requested size: 232.53001pt x 148.4136pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<SD1MPISpeedup.png, id=102, 416.68172pt x 254.07422pt>
+File: SD1MPISpeedup.png Graphic file (type png)
+ <use SD1MPISpeedup.png>
+Package pdftex.def Info: SD1MPISpeedup.png used on input line 662.
+(pdftex.def)             Requested size: 232.53001pt x 141.78821pt.
+
+<TwitterRVMPISpeedup.png, id=103, 420.82219pt x 252.56859pt>
+File: TwitterRVMPISpeedup.png Graphic file (type png)
+
+<use TwitterRVMPISpeedup.png>
+Package pdftex.def Info: TwitterRVMPISpeedup.png used on input line 668.
+(pdftex.def)             Requested size: 232.53001pt x 139.5606pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[17 <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/SD1Time.png> <C
+:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/TwitterRVTime.png> <C
+:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/SD1OMPScalability.png
+> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/TwitterRVOMPScala
+bility.png>]
+
+LaTeX Warning: Text page 18 contains only floats.
+
+[18 <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/SD1MPIScalabili
+ty.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/TwitterRVMP
+IScalability.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/S
+D1OMPSpeedup.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/T
+witterRVOMPSpeedup.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writ
+eups/SD1MPISpeedup.png> <C:/Users/mar3939/Documents/GitHub/ScalableProject/Writ
+eups/TwitterRVMPISpeedup.png>]
 (C:\Users\mar3939\Documents\GitHub\ScalableProject\Writeups\FinalSubmit.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 22--26
 []\OT1/cmr/m/n/10.95 Xiaoyi (Eric) Li,  ``Par-al-lel pager-ank com-pu-ta-tion u
 s-ing mpi,''
  []
 
-) [16]
+) [19]
 (C:\Users\mar3939\Documents\GitHub\ScalableProject\Writeups\FinalSubmit.aux)
 
 LaTeX Warning: There were undefined references.
@@ -514,11 +651,11 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3718 strings out of 493921
- 55522 string characters out of 3144870
- 134484 words of memory out of 3000000
- 6971 multiletter control sequences out of 15000+200000
- 10975 words of font info for 39 fonts, out of 3000000 for 9000
+ 3874 strings out of 493921
+ 58284 string characters out of 3144870
+ 135880 words of memory out of 3000000
+ 7114 multiletter control sequences out of 15000+200000
+ 11581 words of font info for 41 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
  36i,9n,38p,1339b,795s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
@@ -537,9 +674,9 @@ eX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2
 onts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fon
 ts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
 type1/public/amsfonts/cm/cmti10.pfb>
-Output written on FinalSubmit.pdf (16 pages, 901922 bytes).
+Output written on FinalSubmit.pdf (19 pages, 1405729 bytes).
 PDF statistics:
- 145 PDF objects out of 1000 (max. 8388607)
+ 175 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 66 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 116 words of extra memory for PDF output out of 10000 (max. 10000000)
 

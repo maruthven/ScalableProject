@@ -6,9 +6,10 @@
 \contentsline {subsection}{\numberline {4.2}Data-Driven Pagerank}{3}
 \contentsline {subsection}{\numberline {4.3}Linear System Approach}{7}
 \contentsline {subsection}{\numberline {4.4}ADMM}{8}
-\contentsline {section}{\numberline {5}Datasets}{9}
+\contentsline {section}{\numberline {5}Datasets}{10}
 \contentsline {section}{\numberline {6}Results}{10}
 \contentsline {subsection}{\numberline {6.1}Power Iteration Results}{10}
 \contentsline {subsection}{\numberline {6.2}ADMM Results Compared to other Linear methods}{13}
-\contentsline {section}{\numberline {7}Future Work}{14}
+\contentsline {section}{\numberline {7}Future Work}{15}
 \contentsline {section}{\numberline {8}Conclusion}{15}
+\contentsline {section}{Appendices}{17}
