@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  12 DEC 2014 23:23
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.10.4)  13 DEC 2014 19:35
 entering extended mode
 **C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
 (C:/Users/mar3939/Documents/GitHub/ScalableProject/Writeups/FinalSubmit.tex
@@ -551,11 +551,11 @@ File: SD1Time.png Graphic file (type png)
 Package pdftex.def Info: SD1Time.png used on input line 594.
 (pdftex.def)             Requested size: 232.53001pt x 137.97606pt.
 
-<TwitterRVTime.png, id=95, 424.58624pt x 249.18094pt>
+<TwitterRVTime.png, id=95, 425.33907pt x 252.19218pt>
 File: TwitterRVTime.png Graphic file (type png)
  <use TwitterRVTime.png>
 Package pdftex.def Info: TwitterRVTime.png used on input line 600.
-(pdftex.def)             Requested size: 232.53001pt x 136.46819pt.
+(pdftex.def)             Requested size: 232.53001pt x 137.87492pt.
 
 <SD1OMPScalability.png, id=96, 421.9514pt x 253.32141pt>
 File: SD1OMPScalability.png Graphic file (type png)
@@ -564,12 +564,12 @@ File: SD1OMPScalability.png Graphic file (type png)
 Package pdftex.def Info: SD1OMPScalability.png used on input line 611.
 (pdftex.def)             Requested size: 232.53001pt x 139.60164pt.
 
-<TwitterRVOMPScalability.png, id=97, 419.31656pt x 264.61359pt>
+<TwitterRVOMPScalability.png, id=97, 419.69296pt x 264.23718pt>
 File: TwitterRVOMPScalability.png Graphic file (type png)
 
 <use TwitterRVOMPScalability.png>
 Package pdftex.def Info: TwitterRVOMPScalability.png used on input line 617.
-(pdftex.def)             Requested size: 232.53001pt x 146.74113pt.
+(pdftex.def)             Requested size: 232.53001pt x 146.39935pt.
 
 <SD1MPIScalability.png, id=98, 429.10312pt x 265.74281pt>
 File: SD1MPIScalability.png Graphic file (type png)
@@ -578,12 +578,12 @@ File: SD1MPIScalability.png Graphic file (type png)
 Package pdftex.def Info: SD1MPIScalability.png used on input line 628.
 (pdftex.def)             Requested size: 232.53001pt x 144.00583pt.
 
-<TwitterRVMPIScalability.png, id=99, 415.92891pt x 258.21469pt>
+<TwitterRVMPIScalability.png, id=99, 421.1986pt x 251.06297pt>
 File: TwitterRVMPIScalability.png Graphic file (type png)
 
 <use TwitterRVMPIScalability.png>
 Package pdftex.def Info: TwitterRVMPIScalability.png used on input line 634.
-(pdftex.def)             Requested size: 232.53001pt x 144.35889pt.
+(pdftex.def)             Requested size: 232.53001pt x 138.60605pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -594,12 +594,12 @@ File: SD1OMPSpeedup.png Graphic file (type png)
 Package pdftex.def Info: SD1OMPSpeedup.png used on input line 645.
 (pdftex.def)             Requested size: 232.53001pt x 140.31783pt.
 
-<TwitterRVOMPSpeedup.png, id=101, 415.17609pt x 264.99pt>
+<TwitterRVOMPSpeedup.png, id=101, 416.68172pt x 266.11922pt>
 File: TwitterRVOMPSpeedup.png Graphic file (type png)
 
 <use TwitterRVOMPSpeedup.png>
 Package pdftex.def Info: TwitterRVOMPSpeedup.png used on input line 651.
-(pdftex.def)             Requested size: 232.53001pt x 148.4136pt.
+(pdftex.def)             Requested size: 232.53001pt x 148.51003pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -610,12 +610,12 @@ File: SD1MPISpeedup.png Graphic file (type png)
 Package pdftex.def Info: SD1MPISpeedup.png used on input line 662.
 (pdftex.def)             Requested size: 232.53001pt x 141.78821pt.
 
-<TwitterRVMPISpeedup.png, id=103, 420.82219pt x 252.56859pt>
+<TwitterRVMPISpeedup.png, id=103, 423.45703pt x 252.56859pt>
 File: TwitterRVMPISpeedup.png Graphic file (type png)
 
 <use TwitterRVMPISpeedup.png>
 Package pdftex.def Info: TwitterRVMPISpeedup.png used on input line 668.
-(pdftex.def)             Requested size: 232.53001pt x 139.5606pt.
+(pdftex.def)             Requested size: 232.53001pt x 138.68962pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -674,7 +674,7 @@ eX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/MiKTeX 2
 onts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fon
 ts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
 type1/public/amsfonts/cm/cmti10.pfb>
-Output written on FinalSubmit.pdf (19 pages, 1405729 bytes).
+Output written on FinalSubmit.pdf (19 pages, 1405984 bytes).
 PDF statistics:
  175 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
