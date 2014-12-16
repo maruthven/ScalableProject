@@ -8,9 +8,9 @@ Stephen Boyd, Neal Parikh, Eric Chu, Borja Peleato, and Jonathan Eckstein,
   2011.
 
 \bibitem{Joyce}
-Andrew~Lenharth Joyce Jiyoung~Whang and Inderjit~S. Dhillon,
-\newblock ``Scalable data-driven pagerank: Algorithms, system issues '\&'
-  lessons learned,''
+Joyce~Jiyoung Whang, Andrew Lenharth, and Inderjit~S. Dhillon,
+\newblock ``Scalable data-driven pagerank: Algorithms, system issues \& lessons
+  learned,''
 \newblock Submitted.
 
 \bibitem{FastParallel}
